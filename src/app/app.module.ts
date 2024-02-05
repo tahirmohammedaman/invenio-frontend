@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ClipboardModule } from 'ngx-clipboard';
 import { TranslateModule } from '@ngx-translate/core';
@@ -13,6 +13,7 @@ import { AuthService } from './modules/auth/services/auth.service';
 import { environment } from 'src/environments/environment';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
+import { HttpInterceptor } from './modules/auth/http-interceptor';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -51,6 +52,11 @@ function appInitializer(authService: AuthService) {
       multi: true,
       deps: [AuthService],
     },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: HttpInterceptor,
+    //   multi: true,
+    // }
   ],
   bootstrap: [AppComponent],
 })

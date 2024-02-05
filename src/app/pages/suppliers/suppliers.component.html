@@ -1,4 +1,4 @@
-<div class="card mb-5 mb-xl-8">
+<div class="card mb-5 mb-xl-8 w-100">
   <!-- begin::Header -->
   <div class="card-header border-0 pt-5">
     <h3 class="card-title align-items-start flex-column">
@@ -6,9 +6,9 @@
       <span class="text-muted mt-1 fw-bold fs-7">Over 500 new products</span>
     </h3>
     <div class="card-toolbar">
-      <a href="#" class="btn btn-sm btn-light-primary">
+      <a class="btn btn-sm btn-light-primary" (click)="openAddModal()">
         <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
-        New Member
+        Add Supplier
       </a>
     </div>
   </div>
@@ -23,11 +23,11 @@
         <thead>
           <tr class="fw-bolder text-muted bg-light">
             <th class="ps-4 min-w-325px rounded-start">Supplier</th>
-            <th class="min-w-200px">Phone</th>
-            <th class="min-w-200px">Email</th>
-            <th class="min-w-100px">Country</th>
-            <th class="min-w-100px">City</th>
-            <th class="min-w-200px text-end rounded-end"></th>
+            <th class="min-w-150px">Phone</th>
+            <th class="min-w-150px">Email</th>
+            <th class="min-w-80px">Country</th>
+            <th class="min-w-80px">City</th>
+            <th class="min-w-100px text-end rounded-end"></th>
           </tr>
         </thead>
         <!-- end::Table head -->
@@ -74,20 +74,14 @@
               <!-- <span class="badge badge-light-primary fs-7 fw-bold">Approved</span> -->
             </td>
             <td class="text-end">
-              <a href="#" class="
-                btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                me-1
-              ">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
                   class="svg-icon svg-icon-3"></span>
               </a>
-              <a href="#" class="
-                btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                me-1
-              ">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openEditModal(supplier)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-3"></span>
               </a>
-              <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="deleteSupplier(supplier.supplierId)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
                   class="svg-icon svg-icon-3"></span>
               </a>
@@ -103,3 +97,83 @@
   <!-- begin::Body -->
 
 </div>
+
+<app-modal #addModal [modalConfig]="addModalConfig">
+  <form [formGroup]="addSupplierForm" (ngSubmit)="addSupplier()">
+    <div class="row g-10 mb-6">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="name" class="h6 required">Supplier Name</label>
+        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="email" class="h6 required">Email Address</label>
+        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
+        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber" placeholder="Enter primary phone number">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
+        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber" placeholder="Enter secondary phone number">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="country" class="h6 required">Country</label>
+        <input formControlName="Country" type="text" class="form-control" id="country" placeholder="Enter country">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="city" class="h6 required">City</label>
+        <input formControlName="City" type="text" class="form-control" id="city" placeholder="Enter city">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="managerName" class="h6">Manager's Name</label>
+        <input formControlName="ManagerName" type="text" class="form-control" id="managerName" placeholder="Enter manager's name">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeAddModal()">Close</button>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="!addSupplierForm.valid">Add</button>
+    </div>
+  </form>
+</app-modal>
+
+<app-modal #editModal [modalConfig]="editModalConfig">
+  <form [formGroup]="editSupplierForm" (ngSubmit)="editSupplier()">
+    <div class="row g-10 mb-6">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="name" class="h6 required">Supplier Name</label>
+        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="email" class="h6 required">Email Address</label>
+        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
+        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber" placeholder="Enter primary phone number">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
+        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber" placeholder="Enter secondary phone number">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="country" class="h6 required">Country</label>
+        <input formControlName="Country" type="text" class="form-control" id="country" placeholder="Enter country">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="city" class="h6 required">City</label>
+        <input formControlName="City" type="text" class="form-control" id="city" placeholder="Enter city">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="managerName" class="h6">Manager's Name</label>
+        <input formControlName="ManagerName" type="text" class="form-control" id="managerName" placeholder="Enter manager's name">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">Close</button>
+      <button type="submit" class="btn btn-outline-warning" [disabled]="!editSupplierForm.valid">Save</button>
+    </div>
+  </form>
+</app-modal>
