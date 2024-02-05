@@ -248,6 +248,6 @@ export const DefaultLayoutConfig: ILayout = {
   },
   sidebar: {
     componentName: 'sidebar',
-    display: true
-  }
+    display: false,
+  },
 };
