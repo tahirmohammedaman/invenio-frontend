@@ -13,13 +13,17 @@ export class SupplierService {
 
   constructor(private http: HttpClient) { }
 
-  getSuppliers(page?: number, perPage?: number): Observable<SupplierResponse> {
+  getSuppliers(page?: number, perPage?: number, searchKey?: string): Observable<SupplierResponse> {
     let params = new HttpParams()
       .set('$count', 'true');
+    
     if (page && perPage) {
       params = params.append('$skip', `${(page - 1) * perPage}`);
       params = params.append('$top', `${perPage}`);
     }
+
+    if (searchKey?.trim())
+      params = params.append('$search', searchKey);
 
     return this.http.get<SupplierResponse>(this.baseUrl, { params: params });
   }

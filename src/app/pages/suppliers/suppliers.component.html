@@ -1,11 +1,20 @@
+<!-- Suppliers List -->
 <div class="card mb-5 mb-xl-8 w-100">
   <!-- begin::Header -->
-  <div class="card-header border-0 pt-5">
+  <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
     <h3 class="card-title align-items-start flex-column">
-      <span class="card-label fw-bolder fs-3 mb-1">New Arrivals</span>
-      <span class="text-muted mt-1 fw-bold fs-7">Over 500 new products</span>
+      <span class="card-label fw-bolder fs-3 mb-1">Supplier Companies</span>
+      <span class="text-muted mt-1 fw-bold fs-7"></span>
     </h3>
-    <div class="card-toolbar">
+    <div class="card-toolbar d-flex align-items-center justify-content-center">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+        class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
+      <form class="form-inline">
+        <!--begin::Input-->
+        <input type="text" #search class="form-control form-control-flush" name="search" value=""
+          placeholder="Search suppliers" data-kt-search-element="input" (input)="searchSuppliers(search.value)"/>
+        <!--end::Input-->
+      </form>
       <a class="btn btn-sm btn-light-primary m-2" (click)="openAddModal()">
         <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
         Add Supplier
@@ -104,76 +113,103 @@
 
 </div>
 
+<!-- Pagination -->
 <div class="d-flex flex-stack flex-wrap pt-10" *ngIf="totalCount$ | async as totalCount">
-  <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage }} of {{ totalCount }} entries</div>
+  <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage }} of
+    {{ totalCount }} {{ search.value ? 'search results' : 'entries ' }}</div>
 
   <ul class="pagination m-auto">
     <li class="page-item previous" *ngIf="page - 1 > 0">
-      <a class="page-link cursor-pointer" (click)="updatePage(1, perPage)">
+      <a class="page-link cursor-pointer" (click)="updatePage(1, perPage, search.value)">
         <i class="previous"></i>
       </a>
     </li>
     <li class="page-item" *ngIf="page - 2 > 0">
-      <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage)">{{ page - 2 }}</a>
+      <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage, search.value)">{{ page - 2 }}</a>
     </li>
     <li class="page-item" *ngIf="page - 1 > 0">
-      <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage)">{{ page - 1 }}</a>
+      <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage, search.value)">{{ page - 1 }}</a>
     </li>
     <li class="page-item active">
       <a class="page-link cursor-pointer"> {{ page }} </a>
     </li>
     <li class="page-item" *ngIf="page < totalCount / perPage">
-      <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage)">{{ page + 1 }}</a>
+      <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage, search.value)">{{ page + 1 }}</a>
     </li>
     <li class="page-item" *ngIf="page < totalCount / perPage - 1">
-      <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage)">{{ page + 2 }}</a>
+      <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage, search.value)">{{ page + 2 }}</a>
     </li>
     <li class="page-item next" *ngIf="page < totalCount / perPage">
-      <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage)">
+      <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage, search.value)">
         <i class="next"></i>
       </a>
     </li>
   </ul>
 </div>
 
+<!-- Add Modal -->
 <app-modal #addModal [modalConfig]="addModalConfig">
   <form [formGroup]="addSupplierForm" (ngSubmit)="addSupplier()">
     <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
         <label for="name" class="h6 required">Supplier Name</label>
         <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "Name") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="logo" class="h6">Logo</label>
         <input type="file" class="form-control" id="logo" placeholder="Enter logo"
           (change)="onImageSelected($event, addSupplierForm)">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "Logo") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
         <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
           placeholder="Enter primary phone number">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "PrimaryPhoneNumber") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
         <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
           placeholder="Enter secondary phone number">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "SecondaryPhoneNumber") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="email" class="h6 required">Email Address</label>
         <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "Email") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="country" class="h6 required">Country</label>
         <input formControlName="Country" type="text" class="form-control" id="country" placeholder="Enter country">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "Country") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="city" class="h6 required">City</label>
         <input formControlName="City" type="text" class="form-control" id="city" placeholder="Enter city">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "City") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="managerName" class="h6">Manager's Name</label>
         <input formControlName="ManagerName" type="text" class="form-control" id="managerName"
           placeholder="Enter manager's name">
+        <span class="text-danger">
+          {{ validateInput(addSupplierForm, "ManagerName") }}
+        </span>
       </div>
     </div>
 
@@ -184,51 +220,76 @@
   </form>
 </app-modal>
 
+<!-- Edit Modal -->
 <app-modal #editModal [modalConfig]="editModalConfig">
   <form [formGroup]="editSupplierForm" (ngSubmit)="editSupplier()">
     <div class="row g-10 mb-6" *ngIf="selectedSupplier">
       <div class="form-group col-md-6 col-sm-12">
         <label for="name" class="h6 required">Supplier Name</label>
         <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "Name") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="logo" class="h6">{{ selectedSupplier.LogoPath.startsWith("default_") ? 'Add' : 'Change' }}
           Logo</label>
         <input type="file" class="form-control" id="logo" placeholder="Enter logo"
           (change)="onImageSelected($event, editSupplierForm)">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "Logo") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
         <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
           placeholder="Enter primary phone number">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "PrimaryPhoneNumber") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
         <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
           placeholder="Enter secondary phone number">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "SecondaryPhoneNumber") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="email" class="h6 required">Email Address</label>
         <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "Email") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="country" class="h6 required">Country</label>
         <input formControlName="Country" type="text" class="form-control" id="country" placeholder="Enter country">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "Country") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="city" class="h6 required">City</label>
         <input formControlName="City" type="text" class="form-control" id="city" placeholder="Enter city">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "City") }}
+        </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="managerName" class="h6">Manager's Name</label>
         <input formControlName="ManagerName" type="text" class="form-control" id="managerName"
           placeholder="Enter manager's name">
+        <span class="text-danger">
+          {{ validateInput(editSupplierForm, "ManagerName") }}
+        </span>
       </div>
     </div>
 
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">Close</button>
-      <button type="submit" class="btn btn-outline-warning" [disabled]="!editSupplierForm.valid">Save</button>
+      <button type="submit" class="btn btn-outline-warning">Save</button>
     </div>
   </form>
 </app-modal>

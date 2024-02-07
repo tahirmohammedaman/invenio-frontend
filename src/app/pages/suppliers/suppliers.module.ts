@@ -20,7 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ]),
     InlineSVGModule,
     ModalsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    
   ]
 })
 export class SuppliersModule { }

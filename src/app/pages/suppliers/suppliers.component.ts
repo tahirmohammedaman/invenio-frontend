@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, map, of } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, map, of, switchMap, tap } from 'rxjs';
 import { ModalComponent, ModalConfig } from 'src/app/_metronic/partials';
 import { Supplier } from 'src/app/services/supplier/supplier';
 import { SupplierService } from 'src/app/services/supplier/supplier.service';
@@ -16,6 +16,7 @@ export class SuppliersComponent implements OnInit {
 
   page = 1;
   perPage = 5;
+  searchKey$?: Observable<string>;
 
   suppliers$: Observable<Supplier[]>;
   totalCount$: Observable<number>;
@@ -43,9 +44,9 @@ export class SuppliersComponent implements OnInit {
 
     this.addSupplierForm = this.formBuilder.group({
       Name: ['', [Validators.required]],
-      Email: ['', [Validators.required]],
-      PrimaryPhoneNumber: ['', [Validators.required]],
-      SecondaryPhoneNumber: [''],
+      Email: ['', [Validators.required, Validators.email]],
+      PrimaryPhoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      SecondaryPhoneNumber: ['', [Validators.pattern('^[0-9]*$')]],
       Country: ['', [Validators.required]],
       City: ['', [Validators.required]],
       Logo: [''],
@@ -54,31 +55,32 @@ export class SuppliersComponent implements OnInit {
 
     this.editSupplierForm = this.formBuilder.group({
       Name: ['', [Validators.required]],
-      Email: ['', [Validators.required]],
-      PrimaryPhoneNumber: ['', [Validators.required]],
-      SecondaryPhoneNumber: [''],
+      Email: ['', [Validators.required, Validators.email]],
+      PrimaryPhoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      SecondaryPhoneNumber: ['', [Validators.pattern('^[0-9]*$')]],
       Country: ['', [Validators.required]],
       City: ['', [Validators.required]],
       Logo: [''],
       ManagerName: [''],
     });
-
   }
 
   ngOnInit(): void {
     this.updatePage(this.page, this.perPage);
   }
 
-  updatePage(page: number, perPage: number) {
+  updatePage(page: number, perPage: number, searchKey?: string) : Observable<Supplier[]> {
     this.page = page;
     this.perPage = perPage;
 
     this.suppliers$ =
-      this.supplierService.getSuppliers(this.page, this.perPage).pipe(map(response => {
+      this.supplierService.getSuppliers(page, perPage, searchKey).pipe(map(response => {
         this.totalCount$ = of(response["@odata.count"]);
         return response.value;
       }));
     this.changeDetector.detectChanges();
+
+    return this.suppliers$;
   }
 
   async openAddModal() {
@@ -119,6 +121,16 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
+  validateInput(form: FormGroup, controlName: string) : string {
+    if (form.get(controlName)?.touched && form.get(controlName)?.errors?.required) {
+      return 'This field is required';
+    }
+    if (form.get(controlName)?.touched && (form.get(controlName)?.errors?.pattern || form.get(controlName)?.errors?.email)) {
+      return 'Invalid field format';
+    }
+    return '';
+  }
+
   async addSupplier() {
     const formData = new FormData();
     Object.keys(this.addSupplierForm.value).forEach(key => {
@@ -149,6 +161,17 @@ export class SuppliersComponent implements OnInit {
     this.supplierService.deleteSupplier(id).subscribe({
       next: () => this.updatePage(this.page, this.perPage)
     });
+  }
+
+  searchSuppliers(searchKey: string): void {
+    this.searchKey$ = of(searchKey);
+
+    this.suppliers$ = this.searchKey$.pipe(
+      debounceTime(300),        // Debounce for 300ms to reduce unnecessary calls
+      distinctUntilChanged(),    // Only proceed if the search key has changed
+      switchMap(key => this.supplierService.getSuppliers(this.page, this.perPage, key)
+        .pipe(map(response => response.value))),
+    );
   }
 
   exportToExcel() {
