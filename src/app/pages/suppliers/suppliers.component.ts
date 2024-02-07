@@ -69,7 +69,7 @@ export class SuppliersComponent implements OnInit {
     this.updatePage(this.page, this.perPage);
   }
 
-  updatePage(page: number, perPage: number, searchKey?: string) : Observable<Supplier[]> {
+  updatePage(page: number, perPage: number, searchKey?: string) {
     this.page = page;
     this.perPage = perPage;
 
@@ -79,8 +79,6 @@ export class SuppliersComponent implements OnInit {
         return response.value;
       }));
     this.changeDetector.detectChanges();
-
-    return this.suppliers$;
   }
 
   async openAddModal() {
@@ -89,6 +87,7 @@ export class SuppliersComponent implements OnInit {
 
   async closeAddModal() {
     await this.addModal.close();
+    this.addSupplierForm.reset();
   }
 
   async openEditModal(supplier: Supplier) {
@@ -110,6 +109,7 @@ export class SuppliersComponent implements OnInit {
 
   async closeEditModal() {
     await this.editModal.close();
+    this.editSupplierForm.reset();
   }
 
   onImageSelected(event: Event, form: FormGroup) {
@@ -121,7 +121,7 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
-  validateInput(form: FormGroup, controlName: string) : string {
+  validateInput(form: FormGroup, controlName: string): string {
     if (form.get(controlName)?.touched && form.get(controlName)?.errors?.required) {
       return 'This field is required';
     }
@@ -147,7 +147,7 @@ export class SuppliersComponent implements OnInit {
   async editSupplier() {
     const formData = new FormData();
     Object.keys(this.editSupplierForm.value).forEach(key => {
-      formData.append(key, this.editSupplierForm.value[key] ? this.editSupplierForm.value[key] : '');
+      formData.append(key, this.editSupplierForm.value[key] || '');
     });
 
     this.supplierService.editSupplier(this.selectedSupplier.SupplierId, formData).subscribe({
@@ -166,13 +166,12 @@ export class SuppliersComponent implements OnInit {
   searchSuppliers(searchKey: string): void {
     this.searchKey$ = of(searchKey);
 
-    this.suppliers$ = this.searchKey$.pipe(
+    this.searchKey$.pipe(
       debounceTime(300),        // Debounce for 300ms to reduce unnecessary calls
-      distinctUntilChanged(),    // Only proceed if the search key has changed
-      switchMap(key => this.supplierService.getSuppliers(this.page, this.perPage, key)
-        .pipe(map(response => response.value))),
-    );
-  }
+      distinctUntilChanged())    // Only proceed if the search key has changed
+      .subscribe(key => this.updatePage(this.page, this.perPage, key));
+
+  };
 
   exportToExcel() {
     this.supplierService.getSuppliers().subscribe(response => {

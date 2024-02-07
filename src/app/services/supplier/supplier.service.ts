@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseUrl } from '../base-url';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Supplier, SupplierResponse } from './supplier';
 
@@ -16,14 +16,14 @@ export class SupplierService {
   getSuppliers(page?: number, perPage?: number, searchKey?: string): Observable<SupplierResponse> {
     let params = new HttpParams()
       .set('$count', 'true');
-    
+
     if (page && perPage) {
       params = params.append('$skip', `${(page - 1) * perPage}`);
       params = params.append('$top', `${perPage}`);
     }
 
     if (searchKey?.trim())
-      params = params.append('$search', searchKey);
+      params = params.append('$filter',`contains(Name, '${searchKey}') or contains(Country, '${searchKey}') or contains(City, '${searchKey}')`);
 
     return this.http.get<SupplierResponse>(this.baseUrl, { params: params });
   }

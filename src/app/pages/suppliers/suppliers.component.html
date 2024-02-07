@@ -35,7 +35,7 @@
         <!-- begin::Table head -->
         <thead>
           <tr class="fw-bolder text-muted bg-light">
-            <th class="ps-4 min-w-325px rounded-start">Supplier</th>
+            <th class="ps-4 min-w-325px rounded-start">Name</th>
             <th class="min-w-150px">Phone</th>
             <th class="min-w-150px">Email</th>
             <th class="min-w-80px">Country</th>
@@ -232,8 +232,8 @@
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="logo" class="h6">{{ selectedSupplier.LogoPath.startsWith("default_") ? 'Add' : 'Change' }}
-          Logo</label>
+        <label for="logo" class="h6">
+          {{ selectedSupplier.LogoPath.startsWith("default_") ? 'Add' : 'Change' }} Logo</label>
         <input type="file" class="form-control" id="logo" placeholder="Enter logo"
           (change)="onImageSelected($event, editSupplierForm)">
         <span class="text-danger">

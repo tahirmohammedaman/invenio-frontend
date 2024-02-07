@@ -1,0 +1,372 @@
+<div class="row g-10 g-xl-8">
+  <!-- Categories List -->
+  <div class="col-sm-12 col-md-auto min-w-700px m-auto">
+    <div class="card card-xl-stretch mb-xl-8">
+
+      <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+          <span class="card-label fw-bolder fs-3 mb-1">Categories</span>
+          <span class="text-muted mt-1 fw-bold fs-7"></span>
+        </h3>
+
+        <div class="card-toolbar align-items-end">
+          <div>
+            <div class="d-flex align-items-center justify-content-center">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+                class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
+              <form class="form-inline">
+                <input type="text" #search class="form-control form-control-flush" name="search" value=""
+                  placeholder="Search categories" data-kt-search-element="input" (input)="searchCategories(search.value)" />
+              </form>
+            </div>
+            <a class="btn btn-sm btn-light-primary m-2" (click)="openAddModal()">
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
+              Add Category
+            </a>
+            <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
+              Export
+            </a>
+          </div>
+        </div>
+
+      </div>
+      <!-- end::Header -->
+      <!-- begin::Body -->
+      <div class="card-body py-3">
+        <!-- begin::Table container -->
+        <div class="table-responsive">
+          <!-- begin::Table -->
+          <table class="table align-middle gs-0 gy-3">
+            <!-- begin::Table head -->
+            <thead>
+              <tr>
+                <th class="p-0 w-50px"></th>
+                <th class="p-0 min-w-150px"></th>
+                <th class="p-0 min-w-100px"></th>
+              </tr>
+            </thead>
+            <!-- end::Table head -->
+            <!-- begin::Table body -->
+            <tbody>
+              <tr *ngFor="let category of categories$ | async">
+                <td>
+                  <div class="symbol symbol-50px me-2">
+                    <img [src]="'http://localhost:5107/api/static/' + category.ImagePath"
+                      class="svg-icon svg-icon-2x svg-icon-success">
+                  </div>
+                </td>
+                <td>
+                  <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
+                    {{ category.Name }}
+                  </a>
+                  <span class="text-muted mt-1 fw-bold fs-7 d-block">
+                    {{ category.ParentCategory?.Name ? category.ParentCategory?.Name + ' > ' + category.Name : ''}}
+                  </span>
+                </td>
+                <!-- <td class="text-end text-muted fw-bold">69 Products</td> -->
+                <!-- <td class="text-end text-dark fw-bolder fs-6 pe-0">5.4MB</td> -->
+                <td class="text-end">
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                    <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
+                      class="svg-icon svg-icon-3"></span>
+                  </a>
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openEditModal(category)">
+                    <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
+                      class="svg-icon svg-icon-3"></span>
+                  </a>
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="deleteCategory(category.CategoryId)">
+                    <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                      class="svg-icon svg-icon-3"></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <!-- end::Table body -->
+          </table>
+          <!-- end::Table -->
+        </div>
+        <!-- end::Table container -->
+      </div>
+      <!-- begin::Body -->
+
+      <!-- Pagination -->
+      <div class="d-flex flex-stack flex-wrap pt-10" *ngIf="totalCount$ | async as totalCount">
+        <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage
+          }}
+          of {{ totalCount }} entries</div>
+
+        <ul class="pagination m-auto">
+          <li class="page-item previous" *ngIf="page - 1 > 0">
+            <a class="page-link cursor-pointer" (click)="updatePage(1, perPage)">
+              <i class="previous"></i>
+            </a>
+          </li>
+          <li class="page-item" *ngIf="page - 2 > 0">
+            <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage)">{{ page - 2 }}</a>
+          </li>
+          <li class="page-item" *ngIf="page - 1 > 0">
+            <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage)">{{ page - 1 }}</a>
+          </li>
+          <li class="page-item active">
+            <a class="page-link cursor-pointer"> {{ page }} </a>
+          </li>
+          <li class="page-item" *ngIf="page < totalCount / perPage">
+            <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage)">{{ page + 1 }}</a>
+          </li>
+          <li class="page-item" *ngIf="page < totalCount / perPage - 1">
+            <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage)">{{ page + 2 }}</a>
+          </li>
+          <li class="page-item next" *ngIf="page < totalCount / perPage">
+            <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage)">
+              <i class="next"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Overview -->
+  <div class="col-sm-12 col-md-auto m-auto">
+    <div class="card card-xl-stretch mb-xl-8 mt-8">
+      <!-- begin::Header -->
+      <div class="px-9 pt-7 card-rounded h-275px w-100" [ngClass]="'bg-danger'">
+        <!-- begin::Heading -->
+        <div class="d-flex flex-stack">
+          <h3 class="m-0 text-white fw-bolder fs-3">Category Overview</h3>
+          <div class="ms-1">
+            <!-- begin::Menu -->
+            <button type="button" class="
+                  btn btn-sm btn-icon btn-color-white btn-active-white
+                  border-0
+                  me-n3
+                " [ngClass]="'btn-active-color-primary'" data-kt-menu-trigger="click"
+              data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'" class="svg-icon svg-icon-2"></span>
+            </button>
+            <!-- <app-dropdown-menu1></app-dropdown-menu1> -->
+            <!-- end::Menu -->
+          </div>
+        </div>
+        <!-- end::Heading -->
+        <!-- begin::Balance -->
+        <div class="d-flex text-center flex-column text-white pt-8">
+          <span class="fw-bold fs-7">You Balance</span>
+          <span class="fw-bolder fs-2x pt-1">$37,562.00</span>
+        </div>
+        <!-- end::Balance -->
+      </div>
+      <!-- end::Header -->
+      <!-- begin::Items -->
+      <div class="
+            shadow-xs
+            card-rounded
+            mx-9
+            mb-9
+            px-6
+            py-9
+            position-relative
+            z-index-1
+            bg-body
+          " [style.margin-top]="'-100px'">
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center mb-6">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Sales
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">100 Regions</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$2,5b</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr066.svg'"
+                class="svg-icon svg-icon-5 svg-icon-success ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center mb-6">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'" class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Revenue
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">Quarter 2/3</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$1,7b</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'"
+                class="svg-icon svg-icon-5 svg-icon-danger ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center mb-6">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/electronics/elc005.svg'"
+                class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Growth
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">80% Rate</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$8,8m</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr066.svg'"
+                class="svg-icon svg-icon-5 svg-icon-success ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Dispute
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">3090 Refunds</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$270m</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr065.svg'"
+                class="svg-icon svg-icon-5 svg-icon-danger ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+      </div>
+      <!-- end::Items -->
+    </div>
+  </div>
+</div>
+
+<!-- Add Category Modal -->
+<app-modal #addModal [modalConfig]="addModalConfig">
+  <form [formGroup]="addCategoryForm" (ngSubmit)="addCategory()">
+    <div class="row g-10 mb-6">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="name" class="h6 required">Category Name</label>
+        <input formControlName="Name" type="text" class="form-control" id="name" placeholder="Enter category name">
+        <span class="text-danger">
+          {{ validateInput(addCategoryForm, "Name") }}
+        </span>
+      </div>
+
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="image" class="h6">
+          Category Image
+        </label>
+        <input type="file" class="form-control" id="image" placeholder="Enter category image" (change)="onImageSelected($event, addCategoryForm)">
+        <span class="text-danger">
+          {{ validateInput(addCategoryForm, "Image") }}
+        </span>
+      </div>
+
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="parentCategory" class="h6">Parent Category</label>
+        <ng-select formControlName="ParentCategoryId" placeholder="Select Parent Category" [virtualScroll]="true">
+          <ng-option *ngFor="let category of categories$ | async" [value]="category.CategoryId">{{ category.Name }}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeAddModal()">Close</button>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="!addCategoryForm.valid">Add</button>
+    </div>
+  </form>
+</app-modal>
+
+<!-- Edit Category Modal -->
+<app-modal #editModal [modalConfig]="editModalConfig">
+  <form [formGroup]="editCategoryForm" (ngSubmit)="editCategory()">
+    <div class="row g-10 mb-6" *ngIf="selectedCategory">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="name" class="h6 required">Category Name</label>
+        <input formControlName="Name" type="text" class="form-control" id="name" placeholder="Enter category name">
+        <span class="text-danger">
+          {{ validateInput(addCategoryForm, "Name") }}
+        </span>
+      </div>
+
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="image" class="h6">
+          {{ selectedCategory.ImagePath.startsWith("default_") ? 'Add' : 'Change' }} Image
+        </label>
+        <input type="file" class="form-control" id="image" placeholder="Enter category image" (change)="onImageSelected($event, editCategoryForm)">
+        <span class="text-danger">
+          {{ validateInput(addCategoryForm, "Image") }}
+        </span>
+      </div>
+
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="parentCategory" class="h6">Parent Category</label>
+        <ng-select formControlName="ParentCategoryId" placeholder="Select Parent Category" [virtualScroll]="true">
+          <ng-option *ngFor="let category of categories$ | async" [value]="category.CategoryId">{{ category.Name }}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">Close</button>
+      <button type="submit" class="btn btn-outline-warning">Save</button>
+    </div>
+  </form>
+</app-modal>

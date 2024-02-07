@@ -5,3 +5,8 @@
 @import './assets/sass/plugins.scss';
 // @import "./assets/css/style.rtl.css";
 @import "./assets/sass/style.angular.scss";
+
+// ng-select
+@import "~@ng-select/ng-select/themes/default.theme.css";
+// ... or 
+// @import "~@ng-select/ng-select/themes/material.theme.css";
