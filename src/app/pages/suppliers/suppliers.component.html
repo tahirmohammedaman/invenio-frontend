@@ -6,9 +6,13 @@
       <span class="text-muted mt-1 fw-bold fs-7">Over 500 new products</span>
     </h3>
     <div class="card-toolbar">
-      <a class="btn btn-sm btn-light-primary" (click)="openAddModal()">
+      <a class="btn btn-sm btn-light-primary m-2" (click)="openAddModal()">
         <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
         Add Supplier
+      </a>
+      <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
+        Export
       </a>
     </div>
   </div>
@@ -32,44 +36,44 @@
         </thead>
         <!-- end::Table head -->
         <!-- begin::Table body -->
-        <tbody *ngIf="suppliers$ | async">
+        <tbody>
           <tr *ngFor="let supplier of suppliers$ | async; let i = index;">
             <td>
               <div class="d-flex align-items-center">
                 <div class="symbol symbol-50px me-5">
-                  <img src="./assets/media/stock/600x400/img-26.jpg" class="" alt="" />
+                  <img [src]="'http://localhost:5107/api/static/' + supplier.LogoPath" class="" alt="" />
                 </div>
                 <div class="d-flex justify-content-start flex-column">
                   <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
-                    {{ supplier.name}}
+                    {{ supplier.Name}}
                   </a>
                   <span class="text-muted fw-bold text-muted d-block fs-7">
-                    {{ supplier.supplierId }}
+                    {{ supplier.SupplierId }}
                   </span>
                 </div>
               </div>
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplier.primaryPhoneNumber }}
+                {{ supplier.PrimaryPhoneNumber }}
               </a>
-              <span class="text-muted fw-bold text-muted d-block fs-7"> {{ supplier.secondaryPhoneNumber }} </span>
+              <span class="text-muted fw-bold text-muted d-block fs-7"> {{ supplier.SecondaryPhoneNumber }} </span>
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplier.email }}
+                {{ supplier.Email }}
               </a>
               <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Rejected</span> -->
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplier.country }}
+                {{ supplier.Country }}
               </a>
               <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Insurance</span> -->
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplier.city }}
+                {{ supplier.City }}
               </a>
               <!-- <span class="badge badge-light-primary fs-7 fw-bold">Approved</span> -->
             </td>
@@ -78,10 +82,12 @@
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
                   class="svg-icon svg-icon-3"></span>
               </a>
-              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openEditModal(supplier)">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                (click)="openEditModal(supplier)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-3"></span>
               </a>
-              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="deleteSupplier(supplier.supplierId)">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                (click)="deleteSupplier(supplier.SupplierId)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
                   class="svg-icon svg-icon-3"></span>
               </a>
@@ -98,6 +104,38 @@
 
 </div>
 
+<div class="d-flex flex-stack flex-wrap pt-10" *ngIf="totalCount$ | async as totalCount">
+  <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage }} of {{ totalCount }} entries</div>
+
+  <ul class="pagination m-auto">
+    <li class="page-item previous" *ngIf="page - 1 > 0">
+      <a class="page-link cursor-pointer" (click)="updatePage(1, perPage)">
+        <i class="previous"></i>
+      </a>
+    </li>
+    <li class="page-item" *ngIf="page - 2 > 0">
+      <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage)">{{ page - 2 }}</a>
+    </li>
+    <li class="page-item" *ngIf="page - 1 > 0">
+      <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage)">{{ page - 1 }}</a>
+    </li>
+    <li class="page-item active">
+      <a class="page-link cursor-pointer"> {{ page }} </a>
+    </li>
+    <li class="page-item" *ngIf="page < totalCount / perPage">
+      <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage)">{{ page + 1 }}</a>
+    </li>
+    <li class="page-item" *ngIf="page < totalCount / perPage - 1">
+      <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage)">{{ page + 2 }}</a>
+    </li>
+    <li class="page-item next" *ngIf="page < totalCount / perPage">
+      <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage)">
+        <i class="next"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
 <app-modal #addModal [modalConfig]="addModalConfig">
   <form [formGroup]="addSupplierForm" (ngSubmit)="addSupplier()">
     <div class="row g-10 mb-6">
@@ -106,16 +144,23 @@
         <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="email" class="h6 required">Email Address</label>
-        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+        <label for="logo" class="h6">Logo</label>
+        <input type="file" class="form-control" id="logo" placeholder="Enter logo"
+          (change)="onImageSelected($event, addSupplierForm)">
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
-        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber" placeholder="Enter primary phone number">
+        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
+          placeholder="Enter primary phone number">
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
-        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber" placeholder="Enter secondary phone number">
+        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
+          placeholder="Enter secondary phone number">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="email" class="h6 required">Email Address</label>
+        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="country" class="h6 required">Country</label>
@@ -127,7 +172,8 @@
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="managerName" class="h6">Manager's Name</label>
-        <input formControlName="ManagerName" type="text" class="form-control" id="managerName" placeholder="Enter manager's name">
+        <input formControlName="ManagerName" type="text" class="form-control" id="managerName"
+          placeholder="Enter manager's name">
       </div>
     </div>
 
@@ -140,22 +186,30 @@
 
 <app-modal #editModal [modalConfig]="editModalConfig">
   <form [formGroup]="editSupplierForm" (ngSubmit)="editSupplier()">
-    <div class="row g-10 mb-6">
+    <div class="row g-10 mb-6" *ngIf="selectedSupplier">
       <div class="form-group col-md-6 col-sm-12">
         <label for="name" class="h6 required">Supplier Name</label>
         <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="email" class="h6 required">Email Address</label>
-        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+        <label for="logo" class="h6">{{ selectedSupplier.LogoPath.startsWith("default_") ? 'Add' : 'Change' }}
+          Logo</label>
+        <input type="file" class="form-control" id="logo" placeholder="Enter logo"
+          (change)="onImageSelected($event, editSupplierForm)">
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
-        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber" placeholder="Enter primary phone number">
+        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
+          placeholder="Enter primary phone number">
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
-        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber" placeholder="Enter secondary phone number">
+        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
+          placeholder="Enter secondary phone number">
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="email" class="h6 required">Email Address</label>
+        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="country" class="h6 required">Country</label>
@@ -167,7 +221,8 @@
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="managerName" class="h6">Manager's Name</label>
-        <input formControlName="ManagerName" type="text" class="form-control" id="managerName" placeholder="Enter manager's name">
+        <input formControlName="ManagerName" type="text" class="form-control" id="managerName"
+          placeholder="Enter manager's name">
       </div>
     </div>
 

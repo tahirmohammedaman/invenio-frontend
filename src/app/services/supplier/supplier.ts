@@ -1,10 +1,16 @@
-export class Supplier {
-  supplierId: string;
-  name: string;
-  country: string;
-  city: string;
-  email: string;
-  primaryPhoneNumber: string;
-  secondaryPhoneNumber: string;
-  managerName: string;
+export interface Supplier {
+  SupplierId: string;
+  Name: string;
+  Country: string;
+  City: string;
+  Email: string;
+  PrimaryPhoneNumber: string;
+  SecondaryPhoneNumber: string;
+  ManagerName: string;
+  LogoPath: string;
+}
+
+export interface SupplierResponse {
+  value: Supplier[];
+  "@odata.count": number;
 }
