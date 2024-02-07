@@ -1,29 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CategoriesComponent } from './categories.component';
+import { WarehousesComponent } from './warehouses.component';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ModalsModule } from 'src/app/_metronic/partials';
 import { InlineSVGModule } from 'ng-inline-svg-2';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { ModalsModule } from 'src/app/_metronic/partials';
+
 
 
 @NgModule({
   declarations: [
-    CategoriesComponent
+    WarehousesComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild([
       {
         path: '',
-        component: CategoriesComponent
+        component: WarehousesComponent
       }
     ]),
     InlineSVGModule,
     ReactiveFormsModule,
     ModalsModule,
-    NgSelectModule
   ]
 })
-export class CategoriesModule { }
+export class WarehousesModule { }

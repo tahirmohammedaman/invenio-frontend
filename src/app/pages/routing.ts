@@ -17,6 +17,31 @@ const Routing: Routes = [
       import('./categories/categories.module').then((m) => m.CategoriesModule),
   },
   {
+    path: 'warehouses',
+    loadChildren: () =>
+      import('./warehouses/warehouses.module').then((m) => m.WarehousesModule),
+  },
+  // {
+  //   path: 'products',
+  //   loadChildren: () =>
+  //     import('./products/products.module').then((m) => m.ProductsModule),
+  // },
+  // {
+  //   path: 'stocks',
+  //   loadChildren: () =>
+  //     import('./stocks/stocks.module').then((m) => m.StocksModule),
+  // },
+  // {
+  //   path: 'supplies',
+  //   loadChildren: () =>
+  //     import('./supplies/supplies.module').then((m) => m.SuppliesModule),
+  // },
+  // {
+  //   path: 'supply-orders',
+  //   loadChildren: () =>
+  //     import('./supply-orders/supply-orders.module').then((m) => m.SupplyOrdersModule),
+  // },
+  {
     path: 'builder',
     loadChildren: () =>
       import('./builder/builder.module').then((m) => m.BuilderModule),

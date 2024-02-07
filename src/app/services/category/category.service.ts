@@ -9,7 +9,7 @@ import { Category, CategoryResponse } from './category';
 })
 export class CategoryService {
 
-  private baseUrl = `${BaseUrl.url}/categories`
+  private baseUrl = `${BaseUrl.url}/categories`;
 
   constructor(private http: HttpClient) { }
 

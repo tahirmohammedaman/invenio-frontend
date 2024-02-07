@@ -45,8 +45,8 @@ export class SuppliersComponent implements OnInit {
     this.addSupplierForm = this.formBuilder.group({
       Name: ['', [Validators.required]],
       Email: ['', [Validators.required, Validators.email]],
-      PrimaryPhoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      SecondaryPhoneNumber: ['', [Validators.pattern('^[0-9]*$')]],
+      PrimaryPhoneNumber: ['', [Validators.required, Validators.pattern(/^\d(?:\s*\d){8,}$/)]],
+      SecondaryPhoneNumber: ['', [Validators.pattern(/^\d(?:\s*\d){8,}$/)]],
       Country: ['', [Validators.required]],
       City: ['', [Validators.required]],
       Logo: [''],
@@ -56,8 +56,8 @@ export class SuppliersComponent implements OnInit {
     this.editSupplierForm = this.formBuilder.group({
       Name: ['', [Validators.required]],
       Email: ['', [Validators.required, Validators.email]],
-      PrimaryPhoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      SecondaryPhoneNumber: ['', [Validators.pattern('^[0-9]*$')]],
+      PrimaryPhoneNumber: ['', [Validators.required, Validators.pattern(/^\d(?:\s*\d){8,}$/)]],
+      SecondaryPhoneNumber: ['', [Validators.pattern(/^\d(?:\s*\d){8,}$/)]],
       Country: ['', [Validators.required]],
       City: ['', [Validators.required]],
       Logo: [''],
@@ -70,11 +70,11 @@ export class SuppliersComponent implements OnInit {
   }
 
   updatePage(page: number, perPage: number, searchKey?: string) {
-    this.page = page;
+    this.page = Math.ceil(page);
     this.perPage = perPage;
 
     this.suppliers$ =
-      this.supplierService.getSuppliers(page, perPage, searchKey).pipe(map(response => {
+      this.supplierService.getSuppliers(this.page, this.perPage, searchKey).pipe(map(response => {
         this.totalCount$ = of(response["@odata.count"]);
         return response.value;
       }));

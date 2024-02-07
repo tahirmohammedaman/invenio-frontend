@@ -41,6 +41,7 @@ export class CategoriesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetector: ChangeDetectorRef
   ) {
+
     this.addCategoryForm = this.formBuilder.group({
       Name: ['', [Validators.required]],
       Image: [''],
@@ -61,7 +62,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   updatePage(page: number, perPage: number, searchKey?: string) {
-    this.page = page;
+    this.page = Math.ceil(page);
     this.perPage = perPage;
 
     this.categories$ =
@@ -78,6 +79,7 @@ export class CategoriesComponent implements OnInit {
 
   async closeAddModal() {
     await this.addModal.close();
+    this.addCategoryForm.reset();
   }
 
   async openEditModal(category: Category) {
@@ -88,7 +90,6 @@ export class CategoriesComponent implements OnInit {
     });
 
     this.selectedCategory = category;
-
     await this.editModal.open();
   }
 
@@ -150,7 +151,7 @@ export class CategoriesComponent implements OnInit {
     this.searchKey$.pipe(
       debounceTime(300),        // Debounce for 300ms to reduce unnecessary calls
       distinctUntilChanged())   // Only proceed if the search key has changed
-    .subscribe(key => this.updatePage(1, this.perPage, key));
+      .subscribe(key => this.updatePage(1, this.perPage, key));
   }
 
 

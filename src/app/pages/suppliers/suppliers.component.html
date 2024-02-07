@@ -168,16 +168,22 @@
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
-        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
-          placeholder="Enter primary phone number">
+        <div class="input-group">
+          <span class="input-group-text">+</span>
+          <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
+            placeholder="Enter phone number" />
+        </div>
         <span class="text-danger">
           {{ validateInput(addSupplierForm, "PrimaryPhoneNumber") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
-        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
-          placeholder="Enter secondary phone number">
+        <div class="input-group">
+          <span class="input-group-text">+</span>
+          <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
+            placeholder="Enter phone number" />
+        </div>
         <span class="text-danger">
           {{ validateInput(addSupplierForm, "SecondaryPhoneNumber") }}
         </span>
@@ -242,16 +248,22 @@
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="primaryPhoneNumber" class="h6 required">Primary Phone Number</label>
-        <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
-          placeholder="Enter primary phone number">
+        <div class="input-group">
+          <span class="input-group-text">+</span>
+          <input formControlName="PrimaryPhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
+            placeholder="Enter phone number" />
+        </div>
         <span class="text-danger">
           {{ validateInput(editSupplierForm, "PrimaryPhoneNumber") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="secondaryPhoneNumber" class="h6">Secondary Phone Number</label>
-        <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
-          placeholder="Enter secondary phone number">
+        <div class="input-group">
+          <span class="input-group-text">+</span>
+          <input formControlName="SecondaryPhoneNumber" type="text" class="form-control" id="secondaryPhoneNumber"
+            placeholder="Enter phone number" />
+        </div>
         <span class="text-danger">
           {{ validateInput(editSupplierForm, "SecondaryPhoneNumber") }}
         </span>

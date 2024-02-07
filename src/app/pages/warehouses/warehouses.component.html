@@ -1,11 +1,11 @@
 <div class="row g-10 g-xl-8">
-  <!-- Categories List -->
+  <!-- Warehouses List -->
   <div class="col-sm-12 col-md-auto min-w-700px mr-auto">
     <div class="card card-xl-stretch mb-xl-8">
 
       <div class="card-header border-0 pt-5">
         <h3 class="card-title align-items-start flex-column">
-          <span class="card-label fw-bolder fs-3 mb-1">Categories</span>
+          <span class="card-label fw-bolder fs-3 mb-1">Warehouses</span>
           <span class="text-muted mt-1 fw-bold fs-7"></span>
         </h3>
 
@@ -16,12 +16,13 @@
                 class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
               <form class="form-inline">
                 <input type="text" #search class="form-control form-control-flush" name="search" value=""
-                  placeholder="Search categories" data-kt-search-element="input" (input)="searchCategories(search.value)" />
+                  placeholder="Search warehouses" data-kt-search-element="input"
+                  (input)="searchWarehouses(search.value)" />
               </form>
             </div>
             <a class="btn btn-sm btn-light-primary m-2" (click)="openAddModal()">
               <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
-              Add Category
+              Add Warehouse
             </a>
             <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
               <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
@@ -43,39 +44,41 @@
               <tr>
                 <th class="p-0 w-50px"></th>
                 <th class="p-0 min-w-150px"></th>
-                <th class="p-0 min-w-100px"></th>
+                <!-- <th class="p-0 min-w-100px"></th> -->
               </tr>
             </thead>
             <!-- end::Table head -->
             <!-- begin::Table body -->
             <tbody>
-              <tr *ngFor="let category of categories$ | async">
+              <tr *ngFor="let warehouse of warehouses$ | async">
                 <td>
                   <div class="symbol symbol-50px me-2">
-                    <img [src]="'http://localhost:5107/api/static/' + category.ImagePath"
-                      class="svg-icon svg-icon-2x svg-icon-success">
+                    <span [inlineSVG]="'./assets/media/svg/shapes/abstract-6.svg'"
+                      class="svg-icon svg-icon-2x svg-icon-success"></span>
                   </div>
                 </td>
                 <td>
                   <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
-                    {{ category.Name }}
+                    {{ warehouse.Name }}
                   </a>
                   <span class="text-muted mt-1 fw-bold fs-7 d-block">
-                    {{ category.ParentCategory?.Name ? category.ParentCategory?.Name + ' > ' + category.Name : ''}}
+                    {{ warehouse.WarehouseId}}
                   </span>
                 </td>
-                <!-- <td class="text-end text-muted fw-bold">69 Products</td> -->
+                <td class="text-end text-muted fw-bold">{{ warehouse.City }}, {{ warehouse.Country }}</td>
                 <!-- <td class="text-end text-dark fw-bolder fs-6 pe-0">5.4MB</td> -->
                 <td class="text-end">
                   <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
                     <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
                       class="svg-icon svg-icon-3"></span>
                   </a>
-                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openEditModal(category)">
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                    (click)="openEditModal(warehouse)">
                     <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
                       class="svg-icon svg-icon-3"></span>
                   </a>
-                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="deleteCategory(category.CategoryId)">
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                    (click)="deleteWarehouse(warehouse.WarehouseId)">
                     <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
                       class="svg-icon svg-icon-3"></span>
                   </a>
@@ -127,14 +130,14 @@
     </div>
   </div>
 
-  <!-- Category Overview -->
+  <!-- Warehouse Overview -->
   <div class="col-sm-12 col-md-auto mr-auto">
     <div class="card card-xl-stretch mb-xl-8 mt-8">
       <!-- begin::Header -->
       <div class="px-9 pt-7 card-rounded h-275px w-100" [ngClass]="'bg-danger'">
         <!-- begin::Heading -->
         <div class="d-flex flex-stack">
-          <h3 class="m-0 text-white fw-bolder fs-3">Category Overview</h3>
+          <h3 class="m-0 text-white fw-bolder fs-3">Warehouse Overview</h3>
           <div class="ms-1">
             <!-- begin::Menu -->
             <button type="button" class="
@@ -297,73 +300,145 @@
   </div>
 </div>
 
-<!-- Add Category Modal -->
+<!-- Add Modal -->
 <app-modal #addModal [modalConfig]="addModalConfig">
-  <form [formGroup]="addCategoryForm" (ngSubmit)="addCategory()">
+  <form [formGroup]="addWarehouseForm" (ngSubmit)="addWarehouse()">
     <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
-        <label for="name" class="h6 required">Category Name</label>
-        <input formControlName="Name" type="text" class="form-control" id="name" placeholder="Enter category name">
+        <label for="name" class="h6 required">Warehouse Name</label>
+        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
         <span class="text-danger">
-          {{ validateInput(addCategoryForm, "Name") }}
+          {{ validateInput(addWarehouseForm, "Name") }}
         </span>
       </div>
-
       <div class="form-group col-md-6 col-sm-12">
-        <label for="image" class="h6">
-          Category Image
-        </label>
-        <input type="file" class="form-control" id="image" placeholder="Enter category image" (change)="onImageSelected($event, addCategoryForm)">
+        <label for="country" class="h6 required">Country</label>
+        <input formControlName="Country" type="text" class="form-control" id="country" placeholder="Enter country">
         <span class="text-danger">
-          {{ validateInput(addCategoryForm, "Image") }}
+          {{ validateInput(addWarehouseForm, "Country") }}
         </span>
       </div>
-
       <div class="form-group col-md-6 col-sm-12">
-        <label for="parentCategory" class="h6">Parent Category</label>
-        <ng-select formControlName="ParentCategoryId" placeholder="Select Parent Category" [virtualScroll]="true">
-          <ng-option *ngFor="let category of categories$ | async" [value]="category.CategoryId">{{ category.Name }}</ng-option>
-        </ng-select>
+        <label for="city" class="h6 required">City</label>
+        <input formControlName="City" type="text" class="form-control" id="city" placeholder="Enter city">
+        <span class="text-danger">
+          {{ validateInput(addWarehouseForm, "City") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="address" class="h6 required">Address</label>
+        <input formControlName="Address" type="text" class="form-control" id="address" placeholder="Enter address">
+        <span class="text-danger">
+          {{ validateInput(addWarehouseForm, "Address") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="phoneNumber" class="h6 required">Phone Number</label>
+        <div class="input-group">
+          <span class="input-group-text">+</span>
+          <input formControlName="PhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
+            placeholder="Enter phone number" />
+        </div>
+        <span class="text-danger">
+          {{ validateInput(addWarehouseForm, "PhoneNumber") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="email" class="h6 required">Email Address</label>
+        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+        <span class="text-danger">
+          {{ validateInput(addWarehouseForm, "Email") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="latitude" class="h6">Latitude</label>
+        <input formControlName="Latitude" type="text" class="form-control" id="latitude" placeholder="Enter latitude">
+        <span class="text-danger">
+          {{ validateInput(addWarehouseForm, "Latitude") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="longitude" class="h6">Longitude</label>
+        <input formControlName="Longitude" type="text" class="form-control" id="longitude"
+          placeholder="Enter longitude">
+        <span class="text-danger">
+          {{ validateInput(addWarehouseForm, "Longitude") }}
+        </span>
       </div>
     </div>
-
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary" (click)="closeAddModal()">Close</button>
-      <button type="submit" class="btn btn-outline-primary" [disabled]="!addCategoryForm.valid">Add</button>
+      <button type="submit" class="btn" [disabled]="!addWarehouseForm.valid" [ngClass]="!addWarehouseForm.valid ? 'btn-outline-primary' : 'btn-primary'">Add</button>
     </div>
   </form>
 </app-modal>
 
-<!-- Edit Category Modal -->
+<!-- Edit Modal -->
 <app-modal #editModal [modalConfig]="editModalConfig">
-  <form [formGroup]="editCategoryForm" (ngSubmit)="editCategory()">
-    <div class="row g-10 mb-6" *ngIf="selectedCategory">
+  <form [formGroup]="editWarehouseForm" (ngSubmit)="editWarehouse()">
+    <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
-        <label for="name" class="h6 required">Category Name</label>
-        <input formControlName="Name" type="text" class="form-control" id="name" placeholder="Enter category name">
+        <label for="name" class="h6 required">Warehouse Name</label>
+        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
         <span class="text-danger">
-          {{ validateInput(addCategoryForm, "Name") }}
+          {{ validateInput(editWarehouseForm, "Name") }}
         </span>
       </div>
-
       <div class="form-group col-md-6 col-sm-12">
-        <label for="image" class="h6">
-          {{ selectedCategory.ImagePath.startsWith("default_") ? 'Add' : 'Change' }} Image
-        </label>
-        <input type="file" class="form-control" id="image" placeholder="Enter category image" (change)="onImageSelected($event, editCategoryForm)">
+        <label for="country" class="h6 required">Country</label>
+        <input formControlName="Country" type="text" class="form-control" id="country" placeholder="Enter country">
         <span class="text-danger">
-          {{ validateInput(addCategoryForm, "Image") }}
+          {{ validateInput(editWarehouseForm, "Country") }}
         </span>
       </div>
-
       <div class="form-group col-md-6 col-sm-12">
-        <label for="parentCategory" class="h6">Parent Category</label>
-        <ng-select formControlName="ParentCategoryId" placeholder="Select Parent Category" [virtualScroll]="true">
-          <ng-option *ngFor="let category of categories$ | async" [value]="category.CategoryId">{{ category.Name }}</ng-option>
-        </ng-select>
+        <label for="city" class="h6 required">City</label>
+        <input formControlName="City" type="text" class="form-control" id="city" placeholder="Enter city">
+        <span class="text-danger">
+          {{ validateInput(editWarehouseForm, "City") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="address" class="h6 required">Address</label>
+        <input formControlName="Address" type="text" class="form-control" id="address" placeholder="Enter address">
+        <span class="text-danger">
+          {{ validateInput(editWarehouseForm, "Address") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="phoneNumber" class="h6 required">Phone Number</label>
+        <div class="input-group">
+          <span class="input-group-text">+</span>
+          <input formControlName="PhoneNumber" type="text" class="form-control" id="primaryPhoneNumber"
+            placeholder="Enter phone number" />
+        </div>
+        <span class="text-danger">
+          {{ validateInput(editWarehouseForm, "PhoneNumber") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="email" class="h6 required">Email Address</label>
+        <input formControlName="Email" type="email" class="form-control" id="email" placeholder="Enter email address">
+        <span class="text-danger">
+          {{ validateInput(editWarehouseForm, "Email") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="latitude" class="h6">Latitude</label>
+        <input formControlName="Latitude" type="text" class="form-control" id="latitude" placeholder="Enter latitude">
+        <span class="text-danger">
+          {{ validateInput(editWarehouseForm, "Latitude") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="longitude" class="h6">Longitude</label>
+        <input formControlName="Longitude" type="text" class="form-control" id="longitude"
+          placeholder="Enter longitude">
+        <span class="text-danger">
+          {{ validateInput(editWarehouseForm, "Longitude") }}
+        </span>
       </div>
     </div>
-
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">Close</button>
       <button type="submit" class="btn btn-outline-warning">Save</button>
