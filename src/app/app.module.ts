@@ -52,11 +52,11 @@ function appInitializer(authService: AuthService) {
       multi: true,
       deps: [AuthService],
     },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: HttpInterceptor,
-    //   multi: true,
-    // }
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptor,
+      multi: true,
+    }
   ],
   bootstrap: [AppComponent],
 })
