@@ -1,0 +1,197 @@
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable, debounceTime, distinctUntilChanged, map, of } from 'rxjs';
+import { ModalComponent } from 'src/app/_metronic/partials';
+import { Product } from 'src/app/services/product/product';
+import { ProductService } from 'src/app/services/product/product.service';
+import FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+import { CategoryService } from 'src/app/services/category/category.service';
+import { Category } from 'src/app/services/category/category';
+
+@Component({
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.scss']
+})
+export class ProductsComponent implements OnInit {
+
+  page = 1;
+  perPage = 5;
+  searchKey$?: Observable<string>;
+
+  products$: Observable<Product[]>;
+  categories$: Observable<Category[]>;
+
+  totalCount$: Observable<number>;
+  selectedProduct: Product;
+
+  @ViewChild('addProductModal') private addProductModal: ModalComponent;
+  @ViewChild('editProductModal') private editProductModal: ModalComponent;
+
+  addProductModalConfig = {
+    modalTitle: 'Add Product Information'
+  }
+
+  editProductModalConfig = {
+    modalTitle: 'Edit Product Information'
+  }
+
+  addProductForm: FormGroup;
+  editProductForm: FormGroup;
+
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private formBuilder: FormBuilder,
+    private changeDetector: ChangeDetectorRef
+  ) {
+
+    this.addProductForm = this.formBuilder.group({
+      Name: ['', [Validators.required]],
+      ShortDescription: ['', [Validators.required]],
+      Description: [''],
+      CategoryId: ['', [Validators.required]],
+      Price: ['', [Validators.required]],
+      Image1: ['', [Validators.required]],
+      Image2: [''],
+      Image3: [''],
+      Image4: ['']
+    });
+
+    this.editProductForm = this.formBuilder.group({
+      Name: ['', [Validators.required]],
+      ShortDescription: ['', [Validators.required]],
+      Description: [''],
+      CategoryId: ['', [Validators.required]],
+      Price: ['', [Validators.required]],
+      Image1: ['', [Validators.required]],
+      Image2: [''],
+      Image3: [''],
+      Image4: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.updatePage(this.page, this.perPage);
+    this.categories$ =
+      this.categoryService.getCategories().pipe(map(response => response.value));
+  }
+
+  updatePage(page: number, perPage: number, searchKey?: string) {
+    this.page = Math.ceil(page);
+    this.perPage = perPage;
+
+    this.products$ =
+      this.productService.getProducts(this.page, this.perPage, searchKey).pipe(map(response => {
+        this.totalCount$ = of(response["@odata.count"]);
+        return response.value;
+      }));
+    this.changeDetector.detectChanges();
+  }
+
+  async openAddProductModal() {
+    await this.addProductModal.open();
+  }
+
+  async closeAddProductModal() {
+    await this.addProductModal.close();
+    this.addProductForm.reset();
+  }
+
+  async openEditProductModal(product: Product) {
+    this.editProductForm.patchValue({
+      Name: product.Name,
+      ShortDescription: product.ShortDescription,
+      Description: product.Description,
+      CategoryId: product.Category?.CategoryId,
+      Price: product.Price
+    });
+
+    this.selectedProduct = product;
+    await this.editProductModal.open();
+  }
+
+  async closeEditProductModal() {
+    await this.editProductModal.close();
+  }
+
+  onImageSelected(event: Event, form: FormGroup) {
+    const target = event.target as HTMLInputElement;
+    const files: FileList = (target.files as FileList);
+
+    for (let i = 0; i < files.length; i++) {
+      const file: File = files[i];
+      form.patchValue({
+        [`Image${i + 1}`]: file
+      });
+    }
+  }
+
+  validateInput(form: FormGroup, controlName: string): string {
+    if (form.get(controlName)?.touched && form.get(controlName)?.errors?.required) {
+      return 'This field is required';
+    }
+    return '';
+  }
+
+  async addProduct() {
+    const formData = new FormData();
+    Object.keys(this.addProductForm.value).forEach(key => {
+      if (key)
+        formData.append(key, this.addProductForm.value[key]);
+    });
+
+    this.productService.addProduct(formData).subscribe({
+      next: () => this.updatePage(this.page, this.perPage)
+    });
+    await this.addProductModal.close();
+  }
+
+  async editProduct() {
+    const formData = new FormData();
+    Object.keys(this.editProductForm.value).forEach(key => {
+      if (key)
+        formData.append(key, this.editProductForm.value[key] || '');
+    });
+
+    this.productService.editProduct(this.selectedProduct.ProductId, formData).subscribe({
+      next: () => this.updatePage(this.page, this.perPage)
+    });
+    await this.editProductModal.close();
+  }
+
+  async deleteProduct(productId: string) {
+    this.productService.deleteProduct(productId).subscribe({
+      next: () => this.updatePage(this.page, this.perPage)
+    });
+  }
+
+  searchProducts(searchKey: string) {
+    this.searchKey$ = of(searchKey);
+
+    this.searchKey$.pipe(
+      debounceTime(300),
+      distinctUntilChanged())
+      .subscribe(key => this.updatePage(this.page, this.perPage, key));
+  }
+
+  exportToExcel() {
+    this.productService.getProducts().subscribe((response) => {
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(response.value);
+      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+      const data: Blob = new Blob([excelBuffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+
+      const currentDateTime = new Date()
+        .toISOString()
+        .replace(/:/g, '-')
+        .replace(/T/g, '_')
+        .replace(/\.\d{3}Z/, '');
+      FileSaver.saveAs(data, 'products-' + currentDateTime + '.xlsx');
+    });
+  }
+}

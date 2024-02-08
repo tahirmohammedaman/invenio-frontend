@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, debounce, debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, map, of } from 'rxjs';
 import { ModalComponent } from 'src/app/_metronic/partials';
 import { Category } from 'src/app/services/category/category';
 import { CategoryService } from 'src/app/services/category/category.service';

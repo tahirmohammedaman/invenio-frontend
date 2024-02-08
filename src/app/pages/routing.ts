@@ -21,11 +21,11 @@ const Routing: Routes = [
     loadChildren: () =>
       import('./warehouses/warehouses.module').then((m) => m.WarehousesModule),
   },
-  // {
-  //   path: 'products',
-  //   loadChildren: () =>
-  //     import('./products/products.module').then((m) => m.ProductsModule),
-  // },
+  {
+    path: 'products',
+    loadChildren: () =>
+      import('./products/products.module').then((m) => m.ProductsModule),
+  },
   // {
   //   path: 'stocks',
   //   loadChildren: () =>
