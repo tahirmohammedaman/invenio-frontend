@@ -11,6 +11,8 @@ export interface Product {
   Image2Path: string;
   Image3Path: string;
   Image4Path: string;
+  MinimumOrderQuantity: number;
+  MaximumOrderQuantity: number;
 }
 
 export interface ProductResponse {

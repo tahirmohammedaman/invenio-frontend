@@ -23,7 +23,7 @@ export class SupplierService {
     }
 
     if (searchKey?.trim())
-      params = params.append('$filter',`contains(Name, '${searchKey}') or contains(Country, '${searchKey}') or contains(City, '${searchKey}')`);
+      params = params.append('$filter',`contains(tolower(Name), '${searchKey}') or contains(tolower(Country), '${searchKey}') or contains(tolower(City), '${searchKey}')`);
 
     return this.http.get<SupplierResponse>(this.baseUrl, { params: params });
   }

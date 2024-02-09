@@ -1,0 +1,267 @@
+<!-- Stock List -->
+<div class="card mb-5 mb-xl-8 w-100">
+  <!-- begin::Header -->
+  <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
+    <h3 class="card-title align-items-start flex-column">
+      <span class="card-label fw-bolder fs-3 mb-1">Manage stock levels</span>
+      <span class="text-muted mt-1 fw-bold fs-7"></span>
+    </h3>
+    <div class="card-toolbar d-flex align-items-center justify-content-center">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+        class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
+      <form class="form-inline">
+        <!--begin::Input-->
+        <input type="text" #search class="form-control form-control-flush" name="search" value=""
+          placeholder="Search products" data-kt-search-element="input" (input)="searchStocks(search.value)" />
+        <!--end::Input-->
+      </form>
+      <a class="btn btn-sm btn-light-primary m-2" (click)="openAddStockModal()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
+        Add Product Stock
+      </a>
+      <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
+        Export
+      </a>
+    </div>
+  </div>
+  <!-- end::Header -->
+  <!-- begin::Body -->
+  <div class="card-body py-3">
+    <!-- begin::Table container -->
+    <div class="table-responsive">
+      <!-- begin::Table -->
+      <table class="table align-middle gs-0 gy-4">
+        <!-- begin::Table head -->
+        <thead>
+          <tr class="fw-bolder text-muted bg-light">
+            <th class="ps-4 min-w-200px rounded-start">Product</th>
+            <th class="min-w-200px">Category</th>
+            <th class="min-w-150px">Warehouse</th>
+            <th class="min-w-80px">Current Stock</th>
+            <th class="min-w-80px">Low Stock Threshold</th>
+            <th class="min-w-100px text-end rounded-end"></th>
+          </tr>
+        </thead>
+        <!-- end::Table head -->
+        <!-- begin::Table body -->
+        <tbody>
+          <tr *ngFor="let stock of stocks$ | async; let i = index;">
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="symbol symbol-50px me-5">
+                  <img [src]="'http://localhost:5107/api/static/' + stock.Product.Image1Path" class="" alt="" />
+                </div>
+                <div class="d-flex justify-content-start flex-column">
+                  <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
+                    {{ stock.Product.Name }}
+                  </a>
+                  <span class="text-muted fw-bold text-muted d-block fs-7">
+                    {{ stock.StockId }}
+                  </span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ stock.Product.Category.Name }}
+              </a>
+              <span class="text-muted fw-bold text-muted d-block fs-7"></span>
+            </td>
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ stock.Warehouse.Name }}
+              </a>
+              <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Rejected</span> -->
+            </td>
+            <td>
+              <span class="badge badge-light-primary fs-7 fw-bold">
+                {{ stock.StockQuantity }} * {{ stock.QuantityPerUnit }}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-light-danger fs-7 fw-bold">{{ stock.LowStockThreshold }}</span>
+            </td>
+            <td class="text-end">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
+                  class="svg-icon svg-icon-3"></span>
+              </a>
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                (click)="openEditStockModal(stock)">
+                <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-3"></span>
+              </a>
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="deleteStock(stock.StockId)">
+                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                  class="svg-icon svg-icon-3"></span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+        <!-- end::Table body -->
+      </table>
+      <!-- end::Table -->
+    </div>
+    <!-- end::Table container -->
+  </div>
+  <!-- begin::Body -->
+</div>
+
+<!-- Pagination -->
+<div class="d-flex flex-stack flex-wrap pt-10" *ngIf="totalCount$ | async as totalCount">
+  <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage }} of
+    {{ totalCount }} {{ search.value ? 'search results' : 'entries ' }}</div>
+
+  <ul class="pagination m-auto">
+    <li class="page-item previous" *ngIf="page - 1 > 0">
+      <a class="page-link cursor-pointer" (click)="updatePage(1, perPage, search.value)">
+        <i class="previous"></i>
+      </a>
+    </li>
+    <li class="page-item" *ngIf="page - 2 > 0">
+      <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage, search.value)">{{ page - 2 }}</a>
+    </li>
+    <li class="page-item" *ngIf="page - 1 > 0">
+      <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage, search.value)">{{ page - 1 }}</a>
+    </li>
+    <li class="page-item active">
+      <a class="page-link cursor-pointer"> {{ page }} </a>
+    </li>
+    <li class="page-item" *ngIf="page < totalCount / perPage">
+      <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage, search.value)">{{ page + 1 }}</a>
+    </li>
+    <li class="page-item" *ngIf="page < totalCount / perPage - 1">
+      <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage, search.value)">{{ page + 2 }}</a>
+    </li>
+    <li class="page-item next" *ngIf="page < totalCount / perPage">
+      <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage, search.value)">
+        <i class="next"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Add Stock Modal -->
+<app-modal #addStockModal [modalConfig]="addStockModalConfig">
+  <form [formGroup]="addStockForm" (ngSubmit)="addStock()">
+    <div class="row g-10 mb-6">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="product" class="h6">Product</label>
+        <ng-select formControlName="ProductId" placeholder="Select Product" [virtualScroll]="true">
+          <ng-option *ngFor="let product of products$ | async" [value]="product.ProductId">
+            {{ product.Name }}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="warehouse" class="h6">Warehouse</label>
+        <ng-select formControlName="WarehouseId" placeholder="Select Warehouse" [virtualScroll]="true">
+          <ng-option *ngFor="let warehouse of warehouses$ | async" [value]="warehouse.WarehouseId">
+            {{ warehouse.Name }}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="stockQuantity" class="h6 required">Stock Quantity</label>
+        <input formControlName="StockQuantity" type="text" class="form-control" id="stockQuantity"
+          placeholder="Enter stock quantity">
+        <span class="text-danger">
+          {{ validateInput(addStockForm, "StockQuantity") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="lowStockThreshold" class="h6 required">Low Stock Threshold</label>
+        <input formControlName="LowStockThreshold" type="text" class="form-control" id="lowStockThreshold"
+          placeholder="Enter low stock threshold">
+        <span class="text-danger">
+          {{ validateInput(addStockForm, "LowStockThreshold") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="quantityPerUnit" class="h6">Quantity Per Unit</label>
+        <input formControlName="QuantityPerUnit" type="text" class="form-control" id="quantityPerUnit"
+          placeholder="Enter quantity per unit">
+        <span class="text-danger">
+          {{ validateInput(addStockForm, "QuantityPerUnit") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="sku" class="h6">SKU</label>
+        <input formControlName="Sku" type="text" class="form-control" id="sku" placeholder="Enter SKU">
+        <span class="text-danger">
+          {{ validateInput(addStockForm, "Sku") }}
+        </span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeAddStockModal()">Close</button>
+      <button type="submit" class="btn" [disabled]="!addStockForm.valid"
+        [ngClass]="!addStockForm.valid ? 'btn-outline-primary' : 'btn-primary'">Add</button>
+    </div>
+  </form>
+</app-modal>
+
+<!-- Edit Stock Modal -->
+<app-modal #editStockModal [modalConfig]="editStockModalConfig">
+  <form [formGroup]="editStockForm" (ngSubmit)="editStock()">
+    <div class="row g-10 mb-6">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="product" class="h6">Product</label>
+        <ng-select formControlName="ProductId" placeholder="Select Product" [virtualScroll]="true">
+          <ng-option *ngFor="let product of products$ | async" [value]="product.ProductId">
+            {{ product.Name }}
+          </ng-option>
+        </ng-select>
+        <span class="text-danger">
+          {{ validateInput(editStockForm, "ProductId") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="warehouse" class="h6">Warehouse</label>
+        <ng-select formControlName="WarehouseId" placeholder="Select Warehouse" [virtualScroll]="true">
+          <ng-option *ngFor="let warehouse of warehouses$ | async" [value]="warehouse.WarehouseId">
+            {{ warehouse.Name }}
+          </ng-option>
+        </ng-select>
+        <span class="text-danger">
+          {{ validateInput(editStockForm, "WarehouseId") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="stockQuantity" class="h6 required">Stock Quantity</label>
+        <input formControlName="StockQuantity" type="text" class="form-control" id="stockQuantity"
+          placeholder="Enter stock quantity">
+        <span class="text-danger">
+          {{ validateInput(editStockForm, "StockQuantity") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="lowStockThreshold" class="h6 required">Low Stock Threshold</label>
+        <input formControlName="LowStockThreshold" type="text" class="form-control" id="lowStockThreshold"
+          placeholder="Enter low stock threshold">
+        <span class="text-danger">
+          {{ validateInput(editStockForm, "LowStockThreshold") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="quantityPerUnit" class="h6">Quantity Per Unit</label>
+        <input formControlName="QuantityPerUnit" type="text" class="form-control" id="quantityPerUnit"
+          placeholder="Enter quantity per unit">
+        <span class="text-danger">
+          {{ validateInput(editStockForm, "QuantityPerUnit") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="sku" class="h6">SKU</label>
+        <input formControlName="Sku" type="text" class="form-control" id="sku" placeholder="Enter SKU">
+        <span class="text-danger">
+          {{ validateInput(editStockForm, "Sku") }}
+        </span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeEditStockModal()">Close</button>
+      <button type="submit" class="btn btn-outline-warning">Save</button>
+    </div>
+  </form>
+</app-modal>

@@ -56,7 +56,9 @@ export class ProductsComponent implements OnInit {
       Image1: ['', [Validators.required]],
       Image2: [''],
       Image3: [''],
-      Image4: ['']
+      Image4: [''],
+      MinimumOrderQuantity: [''],
+      MaximumOrderQuantity: ['']
     });
 
     this.editProductForm = this.formBuilder.group({
@@ -68,7 +70,9 @@ export class ProductsComponent implements OnInit {
       Image1: ['', [Validators.required]],
       Image2: [''],
       Image3: [''],
-      Image4: ['']
+      Image4: [''],
+      MinimumOrderQuantity: [''],
+      MaximumOrderQuantity: ['']
     });
   }
 
@@ -105,7 +109,9 @@ export class ProductsComponent implements OnInit {
       ShortDescription: product.ShortDescription,
       Description: product.Description,
       CategoryId: product.Category?.CategoryId,
-      Price: product.Price
+      Price: product.Price,
+      MinimumOrderQuantity: product.MinimumOrderQuantity,
+      MaximumOrderQuantity: product.MaximumOrderQuantity
     });
 
     this.selectedProduct = product;

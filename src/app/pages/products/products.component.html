@@ -70,7 +70,7 @@
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ product.Category?.Name }}
+                {{ product.Category.Name }}
               </a>
               <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Rejected</span> -->
             </td>
@@ -195,6 +195,25 @@
           <ng-option *ngFor="let category of categories$ | async" [value]="category.CategoryId">{{ category.Name
             }}</ng-option>
         </ng-select>
+        <span class="text-danger">
+          {{ validateInput(addProductForm, "CategoryId") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="minimumOrderQuantity" class="h6">Minimum Order Quantity</label>
+        <input formControlName="MinimumOrderQuantity" type="text" class="form-control" id="minimumOrderQuantity"
+          placeholder="Enter minimum order quantity">
+        <span class="text-danger">
+          {{ validateInput(addProductForm, "MinimumOrderQuantity") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="maximumOrderQuantity" class="h6">Maximum Order Quantity</label>
+        <input formControlName="MaximumOrderQuantity" type="text" class="form-control" id="maximumOrderQuantity"
+          placeholder="Enter maximum order quantity">
+        <span class="text-danger">
+          {{ validateInput(addProductForm, "MaximumOrderQuantity") }}
+        </span>
       </div>
     </div>
     <div class="modal-footer">
@@ -225,7 +244,7 @@
         </span>
       </div>
       <div class="form-group col-sm-12">
-        <label for="image" class="h6 required">Product Images (min 1)</label>
+        <label for="image" class="h6 required">Change Product Images (min 1)</label>
         <input type="file" class="form-control" id="image" placeholder="Select product images"
           (change)="onImageSelected($event, editProductForm)" multiple>
         <span class="text-danger">
@@ -254,10 +273,29 @@
             {{ category.Name }}
           </ng-option>
         </ng-select>
+        <span class="text-danger">
+          {{ validateInput(editProductForm, "CategoryId") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="minimumOrderQuantity" class="h6">Minimum Order Quantity</label>
+        <input formControlName="MinimumOrderQuantity" type="text" class="form-control" id="minimumOrderQuantity"
+          placeholder="Enter minimum order quantity">
+        <span class="text-danger">
+          {{ validateInput(editProductForm, "MinimumOrderQuantity") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="maximumOrderQuantity" class="h6">Maximum Order Quantity</label>
+        <input formControlName="MaximumOrderQuantity" type="text" class="form-control" id="maximumOrderQuantity"
+          placeholder="Enter maximum order quantity">
+        <span class="text-danger">
+          {{ validateInput(editProductForm, "MaximumOrderQuantity") }}
+        </span>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" (click)="closeAddProductModal()">Close</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="closeEditProductModal()">Close</button>
       <button type="submit" class="btn btn-outline-warning">Save</button>
     </div>
   </form>

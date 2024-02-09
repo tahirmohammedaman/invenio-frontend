@@ -24,7 +24,7 @@ export class CategoryService {
     }
 
     if(searchKey?.trim())
-      params = params.append('$filter', `contains(Name, '${searchKey}')`);
+      params = params.append('$filter', `contains(tolower(Name), '${searchKey}') or contains(tolower(ParentCategory/Name), '${searchKey}')`);
 
     return this.http.get<CategoryResponse>(this.baseUrl, { params: params });
   }
