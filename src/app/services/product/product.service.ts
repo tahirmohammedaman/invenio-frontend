@@ -29,6 +29,10 @@ export class ProductService {
     return this.http.get<ProductResponse>(this.baseUrl, { params: params });
   }
 
+  getProductById(id: string) {
+    return this.http.get<Product>(`${this.baseUrl}/${id}`);
+  }
+
   addProduct(formData: FormData) : Observable<Product>{
     return this.http.post<Product>(this.baseUrl, formData);
   }

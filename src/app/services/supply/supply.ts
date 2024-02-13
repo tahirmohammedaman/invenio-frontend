@@ -9,6 +9,7 @@ export interface Supply {
   SupplyLeadTime: number;
   MaximumOrderQuantity: number;
   MinimumOrderQuantity: number;
+  IsDefaultSupply: boolean;
 }
 
 export interface SupplyResponse {

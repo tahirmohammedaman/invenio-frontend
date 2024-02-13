@@ -1,151 +1,352 @@
-<!-- Product List -->
-<div class="card mb-5 mb-xl-8 w-100">
-  <!-- begin::Header -->
-  <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
-    <h3 class="card-title align-items-start flex-column">
-      <span class="card-label fw-bolder fs-3 mb-1">Product Catalog</span>
-      <span class="text-muted mt-1 fw-bold fs-7"></span>
-    </h3>
-    <div class="card-toolbar d-flex align-items-center justify-content-center">
-      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
-        class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
-      <form class="form-inline">
-        <!--begin::Input-->
-        <input type="text" #search class="form-control form-control-flush" name="search" value=""
-          placeholder="Search products" data-kt-search-element="input" (input)="searchProducts(search.value)" />
-        <!--end::Input-->
-      </form>
-      <a class="btn btn-sm btn-light-primary m-2" (click)="openAddProductModal()">
-        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
-        Add Product
-      </a>
-      <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
-        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
-        Export
-      </a>
+<!-- <div class="container">
+  <div class="card mb-5 mb-xl-8 products-header-bar">
+    <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
+      <h3 class="card-title align-items-start flex-column">
+        <span class="card-label fw-bolder fs-3 mb-1">Product Catalog</span>
+        <span class="text-muted mt-1 fw-bold fs-7"></span>
+      </h3>
+      <div class="card-toolbar d-flex align-items-center justify-content-center">
+        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+          class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
+        <form class="form-inline">
+          <input type="text" #search class="form-control form-control-flush" name="search" value=""
+            placeholder="Search products" data-kt-search-element="input" (input)="searchProducts(search.value)" />
+        </form>
+        <a class="btn btn-sm btn-light-primary m-2" (click)="openAddProductModal()">
+          <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
+          Add Product
+        </a>
+        <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
+          <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
+          Export
+        </a>
+      </div>
     </div>
   </div>
-  <!-- end::Header -->
-  <!-- begin::Body -->
-  <div class="card-body py-3">
-    <!-- begin::Table container -->
-    <div class="table-responsive">
-      <!-- begin::Table -->
-      <table class="table align-middle gs-0 gy-4">
-        <!-- begin::Table head -->
-        <thead>
-          <tr class="fw-bolder text-muted bg-light">
-            <th class="ps-4 min-w-200px rounded-start">Name</th>
-            <th class="min-w-200px">Short Description</th>
-            <th class="min-w-150px">Category</th>
-            <th class="min-w-80px">Price</th>
-            <th class="min-w-80px">Status</th>
-            <th class="min-w-100px text-end rounded-end"></th>
-          </tr>
-        </thead>
-        <!-- end::Table head -->
-        <!-- begin::Table body -->
-        <tbody>
-          <tr *ngFor="let product of products$ | async; let i = index;">
-            <td>
-              <div class="d-flex align-items-center">
-                <div class="symbol symbol-50px me-5">
-                  <img [src]="'http://localhost:5107/api/static/' + product.Image1Path" class="" alt="" />
-                </div>
-                <div class="d-flex justify-content-start flex-column">
+  
+  <div class="row d-flex justify-content-center mt-5">
+    <div class="col-4 card p-3 bg-white m-10" *ngFor="let product of products$ | async">
+      <i class="fa fa-apple"></i>
+      <div class="about-product text-center mt-2">
+        <img [src]="'http://localhost:5107/api/static/' + product.Image1Path" width="200">
+        <div>
+          <h4>{{ product.Name }}</h4>
+          <h6 class="mt-0 text-black-50">{{ product.Category.Name }}</h6>
+        </div>
+      </div>
+      <div class="stats mt-2">
+        <div class="d-flex justify-content-between p-price"><span>Price</span><span>${{ product.Price }}</span></div>
+        <div class="d-flex justify-content-between p-price"><span>Pro stand</span><span>$999</span></div>
+        <div class="d-flex justify-content-between p-price"><span>Vesa Mount Adapter</span><span>$199</span></div>
+      </div>
+      <div class="d-flex justify-content-between total fw-bold mt-4"><span>Total</span><span>$7,197.00</span>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="row g-10 g-xl-8">
+  <!-- Warehouses List -->
+  <div class="col-sm-12 col-md-auto min-w-700px mr-auto">
+    <div class="card card-xl-stretch mb-xl-8">
+
+      <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+          <span class="card-label fw-bolder fs-3 mb-1">Products Catalog</span>
+          <span class="text-muted mt-1 fw-bold fs-7"></span>
+        </h3>
+
+        <div class="card-toolbar align-items-end">
+          <div>
+            <div class="d-flex align-items-center justify-content-center">
+              <span [inlineSVG]="''"
+                class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
+              <form class="form-inline">
+                <input type="text" #search class="form-control form-control-flush" name="search" value=""
+                  placeholder="Search warehouses" data-kt-search-element="input"
+                  (input)="searchProducts(search.value)" />
+              </form>
+            </div>
+            <a class="btn btn-sm btn-light-primary m-2" (click)="openAddProductModal()">
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
+              Add Warehouse
+            </a>
+            <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
+              Export
+            </a>
+          </div>
+        </div>
+
+      </div>
+      <!-- end::Header -->
+      <!-- begin::Body -->
+      <div class="card-body py-3">
+        <!-- begin::Table container -->
+        <div class="table-responsive">
+          <!-- begin::Table -->
+          <table class="table align-middle gs-0 gy-3">
+            <!-- begin::Table head -->
+            <thead>
+              <tr>
+                <th class="p-0 w-50px"></th>
+                <th class="p-0 text-muted fw-bold">Product</th>
+                <th class="p-0 text-muted fw-bold">Category</th>
+                <th class="p-0 text-muted fw-bold">Price</th>
+              </tr>
+            </thead>
+            <!-- end::Table head -->
+            <!-- begin::Table body -->
+            <tbody>
+              <tr *ngFor="let product of products$ | async">
+                <td>
+                  <div class="symbol symbol-50px me-2">
+                    <img [src]="'http://localhost:5107/api/static/' + product.Image1Path"
+                      class="svg-icon svg-icon-2x svg-icon-success">
+                  </div>
+                </td>
+                <td>
                   <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
-                    {{ product.Name}}
+                    {{ product.Name }}
                   </a>
-                  <span class="text-muted fw-bold text-muted d-block fs-7">
-                    {{ product.ProductId }}
+                  <span class="text-muted mt-1 fw-bold fs-7 d-block">
+                    {{ product.ProductId}}
                   </span>
-                </div>
-              </div>
-            </td>
-            <td>
-              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ product.ShortDescription }}
-              </a>
-              <span class="text-muted fw-bold text-muted d-block fs-7"></span>
-            </td>
-            <td>
-              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ product.Category.Name }}
-              </a>
-              <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Rejected</span> -->
-            </td>
-            <td>
-              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ product.Price }}
-              </a>
-              <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Insurance</span> -->
-            </td>
-            <td>
-              <!-- <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ product.Status }}
-              </a> -->
-              <span class="badge badge-light-primary fs-7 fw-bold">Approved</span>
-            </td>
-            <td class="text-end">
-              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                (click)="openDetailProductModal(product)">
-                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
-                  class="svg-icon svg-icon-3"></span>
-              </a>
-              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                (click)="openEditProductModal(product)">
-                <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-3"></span>
-              </a>
-              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
-                (click)="deleteProduct(product.ProductId)">
-                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
-                  class="svg-icon svg-icon-3"></span>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-        <!-- end::Table body -->
-      </table>
-      <!-- end::Table -->
+                </td>
+                <td class="text-muted fw-bold">{{ product.Category.Name }}</td>
+                <td class="text-dark fw-bolder">{{ product.Price }}</td>
+                <td class="text-end">
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" 
+                    [routerLink]="'/products/details/' + product.ProductId">
+                    <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
+                      class="svg-icon svg-icon-3"></span>
+                  </a>
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                    (click)="openEditProductModal(product)">
+                    <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
+                      class="svg-icon svg-icon-3"></span>
+                  </a>
+                  <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                    (click)="deleteProduct(product.ProductId)">
+                    <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                      class="svg-icon svg-icon-3"></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <!-- end::Table body -->
+          </table>
+          <!-- end::Table -->
+        </div>
+        <!-- end::Table container -->
+      </div>
+      <!-- begin::Body -->
+
+      <!-- Pagination -->
+      <div class="d-flex flex-stack flex-wrap pt-10" *ngIf="totalCount$ | async as totalCount">
+        <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage
+          }}
+          of {{ totalCount }} entries</div>
+
+        <ul class="pagination m-auto">
+          <li class="page-item previous" *ngIf="page - 1 > 0">
+            <a class="page-link cursor-pointer" (click)="updatePage(1, perPage)">
+              <i class="previous"></i>
+            </a>
+          </li>
+          <li class="page-item" *ngIf="page - 2 > 0">
+            <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage)">{{ page - 2 }}</a>
+          </li>
+          <li class="page-item" *ngIf="page - 1 > 0">
+            <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage)">{{ page - 1 }}</a>
+          </li>
+          <li class="page-item active">
+            <a class="page-link cursor-pointer"> {{ page }} </a>
+          </li>
+          <li class="page-item" *ngIf="page < totalCount / perPage">
+            <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage)">{{ page + 1 }}</a>
+          </li>
+          <li class="page-item" *ngIf="page < totalCount / perPage - 1">
+            <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage)">{{ page + 2 }}</a>
+          </li>
+          <li class="page-item next" *ngIf="page < totalCount / perPage">
+            <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage)">
+              <i class="next"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <!-- end::Table container -->
   </div>
-  <!-- begin::Body -->
 
-</div>
-
-<!-- Pagination -->
-<div class="d-flex flex-stack flex-wrap pt-10" *ngIf="totalCount$ | async as totalCount">
-  <div class="fs-6 fw-bold text-gray-700 m-auto">Showing {{ ((page - 1) * perPage) + 1 }} to {{ (page) * perPage }} of
-    {{ totalCount }} {{ search.value ? 'search results' : 'entries ' }}</div>
-
-  <ul class="pagination m-auto">
-    <li class="page-item previous" *ngIf="page - 1 > 0">
-      <a class="page-link cursor-pointer" (click)="updatePage(1, perPage, search.value)">
-        <i class="previous"></i>
-      </a>
-    </li>
-    <li class="page-item" *ngIf="page - 2 > 0">
-      <a class="page-link cursor-pointer" (click)="updatePage(page - 2, perPage, search.value)">{{ page - 2 }}</a>
-    </li>
-    <li class="page-item" *ngIf="page - 1 > 0">
-      <a class="page-link cursor-pointer" (click)="updatePage(page - 1, perPage, search.value)">{{ page - 1 }}</a>
-    </li>
-    <li class="page-item active">
-      <a class="page-link cursor-pointer"> {{ page }} </a>
-    </li>
-    <li class="page-item" *ngIf="page < totalCount / perPage">
-      <a class="page-link cursor-pointer" (click)="updatePage(page + 1, perPage, search.value)">{{ page + 1 }}</a>
-    </li>
-    <li class="page-item" *ngIf="page < totalCount / perPage - 1">
-      <a class="page-link cursor-pointer" (click)="updatePage(page + 2, perPage, search.value)">{{ page + 2 }}</a>
-    </li>
-    <li class="page-item next" *ngIf="page < totalCount / perPage">
-      <a class="page-link cursor-pointer" (click)="updatePage(totalCount / perPage, perPage, search.value)">
-        <i class="next"></i>
-      </a>
-    </li>
-  </ul>
+  <!-- Warehouse Overview -->
+  <div class="col-sm-12 col-md-auto mr-auto">
+    <div class="card card-xl-stretch mb-xl-8 mt-8">
+      <!-- begin::Header -->
+      <div class="px-9 pt-7 card-rounded h-275px w-100" [ngClass]="'bg-danger'">
+        <!-- begin::Heading -->
+        <div class="d-flex flex-stack">
+          <h3 class="m-0 text-white fw-bolder fs-3">Product Overview</h3>
+          <div class="ms-1">
+            <!-- begin::Menu -->
+            <button type="button" class="
+                  btn btn-sm btn-icon btn-color-white btn-active-white
+                  border-0
+                  me-n3
+                " [ngClass]="'btn-active-color-primary'" data-kt-menu-trigger="click"
+              data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'" class="svg-icon svg-icon-2"></span>
+            </button>
+            <!-- <app-dropdown-menu1></app-dropdown-menu1> -->
+            <!-- end::Menu -->
+          </div>
+        </div>
+        <!-- end::Heading -->
+        <!-- begin::Balance -->
+        <div class="d-flex text-center flex-column text-white pt-8">
+          <span class="fw-bold fs-7">Product Sales</span>
+          <span class="fw-bolder fs-2x pt-1">$37,562.00</span>
+        </div>
+        <!-- end::Balance -->
+      </div>
+      <!-- end::Header -->
+      <!-- begin::Items -->
+      <div class="
+            shadow-xs
+            card-rounded
+            mx-9
+            mb-9
+            px-6
+            py-9
+            position-relative
+            z-index-1
+            bg-body
+          " [style.margin-top]="'-100px'">
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center mb-6">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Sales
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">100 Regions</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$2,5b</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr066.svg'"
+                class="svg-icon svg-icon-5 svg-icon-success ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center mb-6">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'" class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Revenue
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">Quarter 2/3</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$1,7b</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen024.svg'"
+                class="svg-icon svg-icon-5 svg-icon-danger ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center mb-6">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/electronics/elc005.svg'"
+                class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Growth
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">80% Rate</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$8,8m</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr066.svg'"
+                class="svg-icon svg-icon-5 svg-icon-success ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+        <!-- begin::Item -->
+        <div class="d-flex align-items-center">
+          <!-- begin::Symbol -->
+          <div class="symbol symbol-45px w-40px me-5">
+            <span class="symbol-label bg-lighten">
+              <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-1"></span>
+            </span>
+          </div>
+          <!-- end::Symbol -->
+          <!-- begin::Description -->
+          <div class="d-flex align-items-center flex-wrap w-100">
+            <!-- begin::Title -->
+            <div class="mb-1 pe-3 flex-grow-1">
+              <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+                Dispute
+              </a>
+              <div class="text-gray-400 fw-bold fs-7">3090 Refunds</div>
+            </div>
+            <!-- end::Title -->
+            <!-- begin::Label -->
+            <div class="d-flex align-items-center">
+              <div class="fw-bolder fs-5 text-gray-800 pe-1">$270m</div>
+              <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr065.svg'"
+                class="svg-icon svg-icon-5 svg-icon-danger ms-1"></span>
+            </div>
+            <!-- end::Label -->
+          </div>
+          <!-- end::Description -->
+        </div>
+        <!-- end::Item -->
+      </div>
+      <!-- end::Items -->
+    </div>
+  </div>
 </div>
 
 <!-- Add Product Modal -->
@@ -154,7 +355,7 @@
     <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
         <label for="name" class="h6 required">Name</label>
-        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
+        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter product name">
         <span class="text-danger">
           {{ validateInput(addProductForm, "Name") }}
         </span>
@@ -231,7 +432,7 @@
     <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
         <label for="name" class="h6 required">Name</label>
-        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter supplier name">
+        <input formControlName="Name" type="text" class="form-control" id="firstName" placeholder="Enter product name">
         <span class="text-danger">
           {{ validateInput(editProductForm, "Name") }}
         </span>

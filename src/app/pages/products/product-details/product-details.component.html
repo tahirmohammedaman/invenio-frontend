@@ -1,0 +1,137 @@
+<div class="container-fluid" *ngIf="selectedProduct$ | async as product">
+  <!-- Product section -->
+  <section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+      <div class="row gx-8 gx-lg-10 align-items-center">
+        <div class="col-md-6">
+          <img class="card-img-top mb-5 mb-md-0" [src]="'http://localhost:5107/api/static/' + product.Image1Path"
+            alt="...">
+        </div>
+        <div class="col-md-6">
+          <div class="small mb-1">SKU: {{ product.ProductId }}</div>
+          <h1 class="display-5 fw-bolder">{{ product.Name }}</h1>
+          <div class="fs-5 mb-5">
+            <!-- <span class="text-decoration-line-through">$45.00</span> -->
+            <span>${{ product.Price }}</span>
+          </div>
+          <p class="lead"> {{ product.ShortDescription }} </p>
+          <p class="lead" [innerText]="product.Description"></p>
+          <!-- <div class="d-flex">
+          <input id="inputQuantity" class="form-control text-center me-3" type="number" value="1" style="max-width: 3rem">
+          <button class="btn btn-outline-dark flex-shrink-0" type="button">
+            <i class="bi-cart-fill me-1"></i>
+            Add to cart
+          </button>
+        </div> -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related items section -->
+  <section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="fw-bolder mb-4">Product Supplies</h2>
+        <a class="btn btn-sm btn-light-primary m-2" (click)="openAddSupplyModal()">
+          <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
+          Add Supply
+        </a>
+      </div>
+      <p *ngIf="!(supplies$ | async)?.length" class="h4 text-muted text-center">
+        Product has no supplies. Add one
+      </p>
+      <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="col mb-5" *ngFor="let supply of supplies$ | async">
+          <div class="card">
+            <img class="card-img-top" [src]="'http://localhost:5107/api/static/' + supply.Supplier.LogoPath" alt="...">
+            <div class="card-body p-4">
+              <div class="text-center">
+                <p class="fw-bolder h4">{{ supply.Supplier.Name }}</p>
+                <p class="fw-bold h4">$ {{ supply.Price }}</p>
+                <p class="fw-bold m-0">Lead time: {{ supply.SupplyLeadTime || '-' }}</p>
+                <p class="fw-bold m-0">Minimum Order: {{ supply.MinimumOrderQuantity || '-' }}</p>
+                <p class="fw-bold m-0">Maximum Order: {{ supply.MaximumOrderQuantity || '-' }}</p>
+                <p class="m-3">
+                  <span class="badge badge-light-danger fs-7 fw-bold" *ngIf="supply.IsDefaultSupply">
+                    Default Supply
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+              <div class="text-center">
+                <!-- <a class="btn btn-outline-dark mt-auto" href="#">View options</a> -->
+                <a class="btn btn-icon btn-sm btn-outline-danger" (click)="deleteSupply(supply.SupplyId)">
+                  <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                    class="svg-icon svg-icon-3"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-modal #addSupplyModal [modalConfig]="addSupplyModalConfig">
+  <form [formGroup]="addSupplyForm" (ngSubmit)="addSupply()">
+    <div class="row g-10 mb-6">
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="supplier" class="h6 required">Supplier</label>
+        <ng-select formControlName="SupplierId" placeholder="Select Supplier" [virtualScroll]="true">
+          <ng-option *ngFor="let supplier of suppliers$ | async" [value]="supplier.SupplierId">
+            {{ supplier.Name }}
+          </ng-option>
+        </ng-select>
+        <span class="text-danger">
+          {{ validateInput(addSupplyForm, "SupplierId") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="price" class="h6 required">Price</label>
+        <input type="number" class="form-control" formControlName="Price" id="price" placeholder="Price">
+        <span class="text-danger">
+          {{ validateInput(addSupplyForm, "Price") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="supplyLeadTime" class="h6">Supply Lead Time (in days)</label>
+        <input formControlName="SupplyLeadTime" type="number" class="form-control" id="supplyLeadTime"
+          placeholder="Enter supply lead time">
+        <span class="text-danger">
+          {{ validateInput(addSupplyForm, "SupplyLeadTime") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="minimumOrderQuantity" class="h6">Minimum Order Quantity</label>
+        <input formControlName="MinimumOrderQuantity" type="number" class="form-control" id="minimumOrderQuantity"
+          placeholder="Enter minimum order quantity">
+        <span class="text-danger">
+          {{ validateInput(addSupplyForm, "MinimumOrderQuantity") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="maximumOrderQuantity" class="h6">Maximum Order Quantity</label>
+        <input formControlName="MaximumOrderQuantity" type="number" class="form-control" id="maximumOrderQuantity"
+          placeholder="Enter maximum order quantity">
+        <span class="text-danger">
+          {{ validateInput(addSupplyForm, "MaximumOrderQuantity") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="isDefaultSupply" class="h6">Is Default Supply</label>
+        <input formControlName="IsDefaultSupply" type="checkbox" class="form-check-input" id="isDefaultSupply">
+        <span class="text-danger">
+          {{ validateInput(addSupplyForm, "IsDefaultSupply") }}
+        </span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeAddSupplyModal()">Close</button>
+        <button type="submit" class="btn" [disabled]="!addSupplyForm.valid"
+          [ngClass]="!addSupplyForm.valid ? 'btn-outline-primary' : 'btn-primary'">Add</button>
+      </div>
+    </div>
+  </form>
+</app-modal>

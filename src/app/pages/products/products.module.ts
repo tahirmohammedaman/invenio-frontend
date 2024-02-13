@@ -6,10 +6,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { ModalsModule } from 'src/app/_metronic/partials';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 @NgModule({
   declarations: [
-    ProductsComponent
+    ProductsComponent,
+    ProductDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -17,6 +19,10 @@ import { ModalsModule } from 'src/app/_metronic/partials';
       {
         path: '',
         component: ProductsComponent
+      },
+      {
+        path: 'details/:id',
+        component: ProductDetailsComponent
       }
     ]),
     InlineSVGModule,

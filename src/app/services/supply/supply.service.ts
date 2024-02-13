@@ -12,18 +12,19 @@ export class SupplyService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(page?: number, perPage?: number, searchKey?: string) {
+  getSuppliesForProduct(productId: string, page?: number, perPage?: number) {
     let params = new HttpParams()
-      .set('$expand', 'Product,Supplier')
+      .set('$expand', 'Supplier')
       .set('$count', 'true');
 
     if (page && perPage) {
       params = params.append('$skip', `${(page - 1) * perPage}`);
       params = params.append('$top', `${perPage}`);
+      params = params.append('$filter', `Product/ProductId eq ${productId}`);
     }
 
-    if(searchKey?.trim())
-      params = params.append('$filter', `contains(tolower(Product/Name), '${searchKey}') or contains(tolower(Product/Name), '${searchKey}')`); // TODO: Add more fields to search
+    // if(searchKey?.trim())
+    //   params = params.append('$filter', `contains(tolower(Product/Name), '${searchKey}') or contains(tolower(Supplier/Name), '${searchKey}')`); // TODO: Add more fields to search
 
     return this.http.get<SupplyResponse>(this.baseUrl, { params: params });
   }

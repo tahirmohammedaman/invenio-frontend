@@ -1,0 +1,115 @@
+<!-- Product List -->
+<div class="card mb-5 mb-xl-8 w-100">
+  <!-- begin::Header -->
+  <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
+    <h3 class="card-title align-items-start flex-column">
+      <span class="card-label fw-bolder fs-3 mb-1">Product Catalog</span>
+      <span class="text-muted mt-1 fw-bold fs-7"></span>
+    </h3>
+    <div class="card-toolbar d-flex align-items-center justify-content-center">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+        class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
+      <form class="form-inline">
+        <!--begin::Input-->
+        <input type="text" #search class="form-control form-control-flush" name="search" value=""
+          placeholder="Search products" data-kt-search-element="input" (input)="searchProducts(search.value)" />
+        <!--end::Input-->
+      </form>
+      <a class="btn btn-sm btn-light-primary m-2" (click)="openAddProductModal()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
+        Add Product
+      </a>
+      <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
+        Export
+      </a>
+    </div>
+  </div>
+  <!-- end::Header -->
+  <!-- begin::Body -->
+  <div class="card-body py-3">
+    <!-- begin::Table container -->
+    <div class="table-responsive">
+      <!-- begin::Table -->
+      <table class="table align-middle gs-0 gy-4">
+        <!-- begin::Table head -->
+        <thead>
+          <tr class="fw-bolder text-muted bg-light">
+            <th class="ps-4 min-w-200px rounded-start">Name</th>
+            <th class="min-w-200px">Short Description</th>
+            <th class="min-w-150px">Category</th>
+            <th class="min-w-80px">Price</th>
+            <th class="min-w-80px">Status</th>
+            <th class="min-w-100px text-end rounded-end"></th>
+          </tr>
+        </thead>
+        <!-- end::Table head -->
+        <!-- begin::Table body -->
+        <tbody>
+          <tr *ngFor="let product of products$ | async; let i = index;">
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="symbol symbol-50px me-5">
+                  <img [src]="'http://localhost:5107/api/static/' + product.Image1Path" class="" alt="" />
+                </div>
+                <div class="d-flex justify-content-start flex-column">
+                  <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
+                    {{ product.Name}}
+                  </a>
+                  <span class="text-muted fw-bold text-muted d-block fs-7">
+                    {{ product.ProductId }}
+                  </span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ product.ShortDescription }}
+              </a>
+              <span class="text-muted fw-bold text-muted d-block fs-7"></span>
+            </td>
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ product.Category.Name }}
+              </a>
+              <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Rejected</span> -->
+            </td>
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ product.Price }}
+              </a>
+              <!-- <span class="text-muted fw-bold text-muted d-block fs-7">Insurance</span> -->
+            </td>
+            <td>
+              <!-- <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ product.Status }}
+              </a> -->
+              <span class="badge badge-light-primary fs-7 fw-bold">Approved</span>
+            </td>
+            <td class="text-end">
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                routerLink="/products/details/{{ product.ProductId }}">
+                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
+                  class="svg-icon svg-icon-3"></span>
+              </a>
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                (click)="openEditProductModal(product)">
+                <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-3"></span>
+              </a>
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                (click)="deleteProduct(product.ProductId)">
+                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
+                  class="svg-icon svg-icon-3"></span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+        <!-- end::Table body -->
+      </table>
+      <!-- end::Table -->
+    </div>
+    <!-- end::Table container -->
+  </div>
+  <!-- begin::Body -->
+
+</div>
