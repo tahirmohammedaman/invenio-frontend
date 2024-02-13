@@ -28,6 +28,7 @@ export class ProductsComponent implements OnInit {
 
   @ViewChild('addProductModal') private addProductModal: ModalComponent;
   @ViewChild('editProductModal') private editProductModal: ModalComponent;
+  @ViewChild('detailProductModal') private detailProductModal: ModalComponent;
 
   addProductModalConfig = {
     modalTitle: 'Add Product Information'
@@ -37,8 +38,13 @@ export class ProductsComponent implements OnInit {
     modalTitle: 'Edit Product Information'
   }
 
+  detailProductModalConfig = {
+    modalTitle: 'Product Information'
+  }
+
   addProductForm: FormGroup;
   editProductForm: FormGroup;
+  detailProductForm: FormGroup;
 
   constructor(
     private productService: ProductService,
@@ -73,6 +79,16 @@ export class ProductsComponent implements OnInit {
       Image4: [''],
       MinimumOrderQuantity: [''],
       MaximumOrderQuantity: ['']
+    });
+
+    this.detailProductForm = this.formBuilder.group({
+      Name: [{ value: '', disabled: true }],
+      ShortDescription: [{ value: '', disabled: true }],
+      Description: [{ value: '', disabled: true }],
+      CategoryId: [{ value: '', disabled: true }],
+      Price: [{ value: '', disabled: true }],
+      MinimumOrderQuantity: [{ value: '', disabled: true }],
+      MaximumOrderQuantity: [{ value: '', disabled: true }],
     });
   }
 
@@ -120,6 +136,27 @@ export class ProductsComponent implements OnInit {
 
   async closeEditProductModal() {
     await this.editProductModal.close();
+    this.editProductForm.reset();
+  }
+
+  async openDetailProductModal(product: Product) {
+    this.detailProductForm.patchValue({
+      Name: product.Name,
+      ShortDescription: product.ShortDescription,
+      Description: product.Description,
+      CategoryId: product.Category?.CategoryId,
+      Price: product.Price,
+      MinimumOrderQuantity: product.MinimumOrderQuantity,
+      MaximumOrderQuantity: product.MaximumOrderQuantity
+    });
+
+    this.selectedProduct = product;
+    await this.detailProductModal.open();
+  }
+
+  async closeDetailProductModal() {
+    await this.detailProductModal.close();
+    this.detailProductForm.reset();
   }
 
   onImageSelected(event: Event, form: FormGroup) {

@@ -24,7 +24,7 @@ export class ProductService {
     }
 
     if(searchKey?.trim())
-      params = params.append('$filter', `contains(Name, '${searchKey}')`); // TODO: Add more fields to search
+      params = params.append('$filter', `contains(tolower(Name), '${searchKey}')`); // TODO: Add more fields to search
 
     return this.http.get<ProductResponse>(this.baseUrl, { params: params });
   }

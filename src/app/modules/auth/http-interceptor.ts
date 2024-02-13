@@ -8,6 +8,7 @@ export class HttpInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
 
     let token = localStorage.getItem('authToken');
+    
     if (token) {
       const parsedAuthToken = JSON.parse(token);
 
