@@ -10,6 +10,7 @@ import { Warehouse } from 'src/app/services/warehouse/warehouse';
 import { WarehouseService } from 'src/app/services/warehouse/warehouse.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { BaseUrl } from 'src/app/services/base-url';
 
 @Component({
   selector: 'app-stocks',
@@ -27,6 +28,8 @@ export class StocksComponent {
 
   totalCount$: Observable<number>;
   selectedStock: Stock;
+
+  staticUrl = BaseUrl.url + '/static/';
 
   @ViewChild('addStockModal') private addStockModal: ModalComponent;
   @ViewChild('editStockModal') private editStockModal: ModalComponent;

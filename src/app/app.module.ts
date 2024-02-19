@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
 import { HttpInterceptor } from './modules/auth/http-interceptor';
+import { DatePipe } from '@angular/common';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -56,7 +57,8 @@ function appInitializer(authService: AuthService) {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptor,
       multi: true,
-    }
+    },
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })

@@ -6,6 +6,7 @@ import { Supplier } from 'src/app/services/supplier/supplier';
 import { SupplierService } from 'src/app/services/supplier/supplier.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { BaseUrl } from 'src/app/services/base-url';
 
 @Component({
   selector: 'app-suppliers',
@@ -21,6 +22,8 @@ export class SuppliersComponent implements OnInit {
   suppliers$: Observable<Supplier[]>;
   totalCount$: Observable<number>;
   selectedSupplier: Supplier;
+
+  staticUrl = BaseUrl.url + '/static/';
 
   @ViewChild('addModal') private addModal: ModalComponent;
   @ViewChild('editModal') private editModal: ModalComponent;

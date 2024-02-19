@@ -8,6 +8,7 @@ import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Category } from 'src/app/services/category/category';
+import { BaseUrl } from 'src/app/services/base-url';
 
 @Component({
   selector: 'app-products',
@@ -25,6 +26,8 @@ export class ProductsComponent implements OnInit {
 
   totalCount$: Observable<number>;
   selectedProduct: Product;
+
+  staticUrl = BaseUrl.url + '/static/';
 
   @ViewChild('addProductModal') private addProductModal: ModalComponent;
   @ViewChild('editProductModal') private editProductModal: ModalComponent;

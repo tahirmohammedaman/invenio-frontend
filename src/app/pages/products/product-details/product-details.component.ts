@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { PageInfoService, PageLink } from 'src/app/_metronic/layout';
 import { ModalComponent } from 'src/app/_metronic/partials';
+import { BaseUrl } from 'src/app/services/base-url';
 import { Product } from 'src/app/services/product/product';
 import { ProductService } from 'src/app/services/product/product.service';
 import { Supplier } from 'src/app/services/supplier/supplier';
@@ -29,6 +30,8 @@ export class ProductDetailsComponent implements OnInit {
       isActive: false
     }
   ]
+
+  staticUrl = BaseUrl.url + '/static/';
 
   @ViewChild('addSupplyModal') private addSupplyModal: ModalComponent;
   @ViewChild('editSupplyModal') private editSupplyModal: ModalComponent;

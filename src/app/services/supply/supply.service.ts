@@ -15,12 +15,12 @@ export class SupplyService {
   getSuppliesForProduct(productId: string, page?: number, perPage?: number) {
     let params = new HttpParams()
       .set('$expand', 'Supplier')
-      .set('$count', 'true');
+      .set('$count', 'true')
+      .set('$filter', `Product/ProductId eq ${productId}`);
 
     if (page && perPage) {
       params = params.append('$skip', `${(page - 1) * perPage}`);
       params = params.append('$top', `${perPage}`);
-      params = params.append('$filter', `Product/ProductId eq ${productId}`);
     }
 
     // if(searchKey?.trim())

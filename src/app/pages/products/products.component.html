@@ -28,7 +28,7 @@
     <div class="col-4 card p-3 bg-white m-10" *ngFor="let product of products$ | async">
       <i class="fa fa-apple"></i>
       <div class="about-product text-center mt-2">
-        <img [src]="'http://localhost:5107/api/static/' + product.Image1Path" width="200">
+        <img [src]="staticUrl + product.Image1Path" width="200">
         <div>
           <h4>{{ product.Name }}</h4>
           <h6 class="mt-0 text-black-50">{{ product.Category.Name }}</h6>
@@ -101,7 +101,7 @@
               <tr *ngFor="let product of products$ | async">
                 <td>
                   <div class="symbol symbol-50px me-2">
-                    <img [src]="'http://localhost:5107/api/static/' + product.Image1Path"
+                    <img [src]="staticUrl + product.Image1Path"
                       class="svg-icon svg-icon-2x svg-icon-success">
                   </div>
                 </td>

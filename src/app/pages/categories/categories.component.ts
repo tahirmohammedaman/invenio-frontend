@@ -6,6 +6,7 @@ import { Category } from 'src/app/services/category/category';
 import { CategoryService } from 'src/app/services/category/category.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { BaseUrl } from 'src/app/services/base-url';
 
 @Component({
   selector: 'app-categories',
@@ -21,6 +22,8 @@ export class CategoriesComponent implements OnInit {
   categories$: Observable<Category[]>;
   totalCount$: Observable<number>;
   selectedCategory: Category;
+
+  staticUrl = BaseUrl.url + '/static/';
 
   @ViewChild('addModal') private addModal: ModalComponent;
   @ViewChild('editModal') private editModal: ModalComponent;

@@ -52,7 +52,7 @@
               <tr *ngFor="let category of categories$ | async">
                 <td>
                   <div class="symbol symbol-50px me-2">
-                    <img [src]="'http://localhost:5107/api/static/' + category.ImagePath"
+                    <img [src]="staticUrl + category.ImagePath"
                       class="svg-icon svg-icon-2x svg-icon-success">
                   </div>
                 </td>
