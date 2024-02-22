@@ -8,7 +8,7 @@ import { BaseUrl } from '../base-url';
 })
 export class SupplyService {
 
-  private baseUrl = `${BaseUrl.url}/supplies`
+  private baseUrl = `${BaseUrl.url}/supplies`;
 
   constructor(private http: HttpClient) { }
 

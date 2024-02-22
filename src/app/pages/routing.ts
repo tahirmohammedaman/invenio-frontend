@@ -31,16 +31,26 @@ const Routing: Routes = [
     loadChildren: () =>
       import('./stocks/stocks.module').then((m) => m.StocksModule),
   },
-  // {
-  //   path: 'supplies',
-  //   loadChildren: () =>
-  //     import('./supplies/supplies.module').then((m) => m.SuppliesModule),
-  // },
+  {
+    path: 'customers',
+    loadChildren: () =>
+      import('./customers/customers.module').then((m) => m.CustomersModule),
+  },
   {
     path: 'supply-orders',
     loadChildren: () =>
       import('./supply-orders/supply-orders.module').then((m) => m.SupplyOrdersModule),
   },
+  // {
+  //   path: 'sale-orders',
+  //   loadChildren: () =>
+  //     import('./sale-orders/sale-orders.module').then((m) => m.SaleOrdersModule),
+  // },
+  // {
+  //   path: 'supplies',
+  //   loadChildren: () =>
+  //     import('./supplies/supplies.module').then((m) => m.SuppliesModule),
+  // },
   {
     path: 'builder',
     loadChildren: () =>
