@@ -29,9 +29,9 @@ export class AuthHTTPService {
 
     return this.http.post(LOGIN_URL, formdata , { observe: 'response' }).pipe (
       concatMap((response: HttpResponse<{}>) => {
-        const decodedToken = jwtDecode<JwtPayload>((response.body as {token?:string})?.token || '');
+        const decodedToken = jwtDecode<JwtPayload>((response.body as {Token?:string})?.Token || '');
         const auth = new AuthModel();
-        auth.authToken = (response.body as {token?: string})?.token || '';
+        auth.authToken = (response.body as {Token?: string})?.Token || '';
         auth.refreshToken = '';
         auth.expiresIn = decodedToken.exp? new Date(decodedToken.exp * 1000): null;
         auth.displayImage = "";
