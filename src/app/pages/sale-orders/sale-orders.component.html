@@ -1,9 +1,9 @@
-<!-- Supply Orders List -->
+<!-- Sale Orders List -->
 <div class="card mb-5 mb-xl-8 w-100">
   <!-- begin::Header -->
   <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
     <h3 class="card-title align-items-start flex-column">
-      <span class="card-label fw-bolder fs-3 mb-1">Supply Orders [Purchases]</span>
+      <span class="card-label fw-bolder fs-3 mb-1">Customer Orders [Sales]</span>
       <span class="text-muted mt-1 fw-bold fs-7"></span>
     </h3>
     <div class="card-toolbar d-flex align-items-center justify-content-center">
@@ -12,11 +12,10 @@
       <form class="form-inline">
         <!--begin::Input-->
         <input type="text" #search class="form-control form-control-flush" name="search" value=""
-          placeholder="Search supply orders" data-kt-search-element="input"
-          (input)="searchSupplyOrders(search.value)" />
+          placeholder="Search sale orders" data-kt-search-element="input" (input)="searchSaleOrders(search.value)" />
         <!--end::Input-->
       </form>
-      <a class="btn btn-sm btn-light-primary m-2" (click)="openAddSupplyOrderModal()">
+      <a class="btn btn-sm btn-light-primary m-2" (click)="openOrderModal()">
         <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
         Order
       </a>
@@ -30,76 +29,90 @@
   <!-- begin::Body -->
   <div class="card-body py-3">
     <!-- begin::Table container -->
-    <div class="table-responsive">
+    <div class="table-responsive" style="overflow-x: auto;">
       <!-- begin::Table -->
-      <table class="table align-middle gs-0 gy-4">
+      <table class="table align-middle gs-0 gy-4" style="min-width: 1000px;"> <!-- Set a minimum width for the table -->
         <!-- begin::Table head -->
         <thead>
           <tr class="fw-bolder text-muted bg-light">
             <th class="ps-4 min-w-150px rounded-start">Product</th>
-            <th class="min-w-150px">Supplier</th>
-            <th class="min-w-150px">Warehouse</th>
+            <th class="min-w-100px">Category</th>
+            <th class="min-w-120px">Customer</th>
+            <th class="min-w-120px">Warehouse</th>
             <th class="min-w-80px">Order Date</th>
-            <th class="min-w-80px">Status</th>
+            <th class="min-w-50px">Price</th>
+            <th class="min-w-50px">Quantity</th>
             <th class="min-w-100px text-end rounded-end"></th>
           </tr>
         </thead>
         <!-- end::Table head -->
         <!-- begin::Table body -->
         <tbody>
-          <tr *ngFor="let supplyOrder of supplyOrders$ | async; let i = index;">
+          <tr *ngFor="let saleOrder of saleOrders$ | async; let i = index;">
             <td>
               <div class="d-flex align-items-center">
                 <div class="symbol symbol-50px me-5">
-                  <img [src]="staticUrl + supplyOrder.Supply.Product.Image1Path" class="" alt="" />
+                  <img [src]="staticUrl + saleOrder.Product.Image1Path" class="" alt="" />
                 </div>
                 <div class="d-flex justify-content-start flex-column">
                   <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
-                    {{ supplyOrder.Supply.Product.Name }}
+                    {{ saleOrder.Product.Name }}
                   </a>
                   <span class="text-muted fw-bold text-muted d-block fs-7">
-                    {{ supplyOrder.Supply.Product.ProductId }}
+                    {{ saleOrder.Product.ProductId }}
                   </span>
                 </div>
               </div>
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplyOrder.Supply.Supplier.Name }}
+                {{ saleOrder.Product.Category.Name }}
               </a>
               <!-- <span class="text-muted fw-bold text-muted d-block fs-7"></span> -->
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplyOrder.Warehouse.Name }}
+                {{ saleOrder.Customer.Name }}
               </a>
               <!-- <span class="text-muted fw-bold text-muted d-block fs-7"></span> -->
             </td>
             <td>
               <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
-                {{ supplyOrder.OrderDate.toLocaleString() | date: 'medium' }}
+                {{ saleOrder.Warehouse.Name }}
               </a>
-              <span class="text-muted fw-bold text-muted d-block fs-7">
+              <!-- <span class="text-muted fw-bold text-muted d-block fs-7"></span> -->
+            </td>
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ saleOrder.OrderDate.toLocaleString() | date: 'medium'}}
+              </a>
+              <!-- <span class="text-muted fw-bold text-muted d-block fs-7">
                 Delivery: {{ supplyOrder.DeliveryDate.toLocaleString() | date: 'longDate' }}
+              </span> -->
+            </td>
+            <!-- <td>
+              <span class="badge fs-7 fw-bold"
+                [ngClass]="supplyOrder.IsDelivered ? 'badge-light-success' : 'badge-light-danger'">
+                {{ supplyOrder.IsDelivered ? 'Delivered' : 'Pending' }}
               </span>
+            </td> -->
+            <td>
+              <a href="#" class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">
+                {{ saleOrder.Price | currency: 'ETB ' }}
+              </a>
             </td>
             <td>
-              <span class="badge fs-8 fw-bolder" [ngClass]="{
-                'badge-light-success': supplyOrder.IsDelivered,
-                'badge-light-warning': !supplyOrder.IsDelivered && checkOverdue(supplyOrder.DeliveryDate),
-                'badge-light-danger': !supplyOrder.IsDelivered && !checkOverdue(supplyOrder.DeliveryDate)
-              }">
-                {{ supplyOrder.IsDelivered ? 'Delivered' : checkOverdue(supplyOrder.DeliveryDate) ? 'Pending' : 'Overdue' }}
+              <span class="badge fs-7 fw-bold badge-light-success">
+                {{ saleOrder.Quantity }}
               </span>
-            </td>                       
+            </td>
             <td class="text-end">
-              <a class="btn btn-icon btn-active-color-success btn-sm me-1" *ngIf="!supplyOrder.IsDelivered"
-                (click)="markSupplyOrdersAsDeliveredAndUpdateStock(supplyOrder.SupplyOrderId)">
-                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen043.svg'"
+              <!-- <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
                   class="svg-icon svg-icon-3"></span>
-              </a>
-              <a class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm"
-                (click)="deleteSupplyOrder(supplyOrder.SupplyOrderId)">
+              </a> -->
+              <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                (click)="deleteSaleOrder(saleOrder.SaleOrderId)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
                   class="svg-icon svg-icon-3"></span>
               </a>
@@ -149,9 +162,9 @@
   </ul>
 </div>
 
-<!-- Add Supply Order Modal -->
-<app-modal #addSupplyOrderModal [modalConfig]="addSupplyOrderModalConfig">
-  <form [formGroup]="addSupplyOrderForm" (ngSubmit)="addSupplyOrder()">
+<!-- Order Nodal -->
+<app-modal #orderModal [modalConfig]="orderModalConfig">
+  <form [formGroup]="addSaleOrderForm" (ngSubmit)="addSaleOrder()">
     <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
         <label for="product" class="h6">Product</label>
@@ -161,19 +174,18 @@
           </ng-option>
         </ng-select>
         <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "ProductId") }}
+          {{ validateOrderForm("ProductId") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="supplier" class="h6">Supplier</label>
-        <ng-select [disabled]="!(supplies$ | async)" formControlName="SupplyId" placeholder="Select Supplier"
-          [virtualScroll]="true">
-          <ng-option *ngFor="let supply of supplies$ | async" [value]="supply.SupplyId">
-            {{ supply.Supplier.Name }}
+        <label for="customer" class="h6">Customer</label>
+        <ng-select formControlName="CustomerId" placeholder="Select Customer" [virtualScroll]="true">
+          <ng-option *ngFor="let customer of customers$ | async" [value]="customer.CustomerId">
+            {{ customer.Name }}
           </ng-option>
         </ng-select>
         <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "SupplyId") }}
+          {{ validateOrderForm("CustomerId") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
@@ -184,44 +196,44 @@
           </ng-option>
         </ng-select>
         <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "WarehouseId") }}
-        </span>
-      </div>
-      <div class="form-group col-md-6 col-sm-12">
-        <label for="price" class="h6">Price</label>
-        <input formControlName="Price" type="number" class="form-control" id="price" placeholder="Enter price">
-        <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "Price") }}
+          {{ validateOrderForm("WarehouseId") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="quantity" class="h6">Quantity</label>
-        <input formControlName="Quantity" type="number" class="form-control" id="quantity" placeholder="Enter quantity">
+        <input type="number" formControlName="Quantity" class="form-control" id="quantity"
+          placeholder="Enter Quantity" />
         <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "Quantity") }}
+          {{ validateOrderForm("Quantity") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="deliveryDate" class="h6">Delivery Date</label>
-        <input formControlName="DeliveryDate" type="date" class="form-control" id="deliveryDate"
-          placeholder="Enter delivery date">
+        <label for="price" class="h6">Price</label>
+        <input type="number" formControlName="Price" class="form-control" id="price" placeholder="Enter Price" />
         <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "DeliveryDate") }}
+          {{ validateOrderForm("Price") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
         <label for="orderDate" class="h6">Order Date</label>
-        <input formControlName="OrderDate" type="date" class="form-control" id="orderDate"
-          placeholder="Enter order date">
+        <input type="date" formControlName="OrderDate" class="form-control" id="orderDate" />
         <span class="text-danger">
-          {{ validateInput(addSupplyOrderForm, "OrderDate") }}
+          {{ validateOrderForm("OrderDate") }}
+        </span>
+      </div>
+      <div class="form-group col-md-6 col-sm-12">
+        <label for="deliveryAddress" class="h6">Delivery Address</label>
+        <input type="text" formControlName="DeliveryAddress" class="form-control" id="deliveryAddress"
+          placeholder="Enter Delivery Address" />
+        <span class="text-danger">
+          {{ validateOrderForm("DeliveryAddress") }}
         </span>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-secondary" (click)="closeAddSupplyOrderModal()">Close</button>
-      <button type="submit" class="btn" [disabled]="!addSupplyOrderForm.valid"
-        [ngClass]="!addSupplyOrderForm.valid ? 'btn-outline-primary' : 'btn-primary'">Add</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="closeOrderModal()">Close</button>
+      <button type="submit" class="btn" [disabled]="!addSaleOrderForm.valid"
+        [ngClass]="!addSaleOrderForm.valid ? 'btn-outline-primary' : 'btn-primary'">Add</button>
     </div>
   </form>
 </app-modal>

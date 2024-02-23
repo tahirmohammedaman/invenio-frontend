@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SupplyOrdersComponent } from './supply-orders.component';
+import { SaleOrdersComponent } from './sale-orders.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -9,14 +9,14 @@ import { ModalsModule } from 'src/app/_metronic/partials';
 
 @NgModule({
   declarations: [
-    SupplyOrdersComponent
+    SaleOrdersComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild([
       {
         path: '',
-        component: SupplyOrdersComponent
+        component: SaleOrdersComponent
       },
     ]),
     InlineSVGModule,
@@ -25,4 +25,4 @@ import { ModalsModule } from 'src/app/_metronic/partials';
     NgSelectModule
   ]
 })
-export class SupplyOrdersModule { }
+export class SaleOrdersModule { }

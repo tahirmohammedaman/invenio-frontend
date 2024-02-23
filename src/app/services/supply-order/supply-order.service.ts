@@ -25,7 +25,7 @@ export class SupplyOrderService {
     }
 
     if (searchKey?.trim())
-      params = params.append('$filter', `contains(tolower(Supply/Product/Name), '${searchKey}')`); // TODO: Add more fields to search
+      params = params.append('$filter', `contains(tolower(Supply/Product/Name), '${searchKey}') or contains(tolower(Supply/Supplier/Name), '${searchKey}') or contains(tolower(Warehouse/Name), '${searchKey}')`);
 
     return this.http.get<SupplyOrderResponse>(this.baseUrl, { params: params });
   }
@@ -36,5 +36,9 @@ export class SupplyOrderService {
 
   deleteSupplyOrder(id: string) {
     return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  markSupplyOrderAsDeliveredAndUpdateStock(id: string) {
+    return this.http.post(`${this.baseUrl}/${id}/delivery`, {});
   }
 }

@@ -41,16 +41,11 @@ const Routing: Routes = [
     loadChildren: () =>
       import('./supply-orders/supply-orders.module').then((m) => m.SupplyOrdersModule),
   },
-  // {
-  //   path: 'sale-orders',
-  //   loadChildren: () =>
-  //     import('./sale-orders/sale-orders.module').then((m) => m.SaleOrdersModule),
-  // },
-  // {
-  //   path: 'supplies',
-  //   loadChildren: () =>
-  //     import('./supplies/supplies.module').then((m) => m.SuppliesModule),
-  // },
+  {
+    path: 'sale-orders',
+    loadChildren: () =>
+      import('./sale-orders/sale-orders.module').then((m) => m.SaleOrdersModule),
+  },
   {
     path: 'builder',
     loadChildren: () =>

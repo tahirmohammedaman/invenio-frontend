@@ -12,7 +12,6 @@ import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { Warehouse } from 'src/app/services/warehouse/warehouse';
 import { WarehouseService } from 'src/app/services/warehouse/warehouse.service';
-import { DatePipe } from '@angular/common';
 import { BaseUrl } from 'src/app/services/base-url';
 
 @Component({
@@ -85,6 +84,10 @@ export class SupplyOrdersComponent implements OnInit {
   }
 
   updatePage(page: number, perPage: number, searchKey?: string) {
+
+    this.page = Math.ceil(page);
+    this.perPage = perPage;
+
     this.supplyOrders$ =
       this.supplyOrderService.getSupplyOrders(page, perPage, searchKey).pipe(map(res => {
         this.totalCount$ = of(res['@odata.count']);
@@ -99,6 +102,7 @@ export class SupplyOrdersComponent implements OnInit {
 
   closeAddSupplyOrderModal() {
     this.addSupplyOrderModal.close();
+    this.addSupplyOrderForm.reset();
   }
 
   validateInput(form: FormGroup, controlName: string): string {
@@ -108,21 +112,25 @@ export class SupplyOrdersComponent implements OnInit {
     return '';
   }
 
+  checkOverdue(deliveryDate: Date) {
+    return new Date(deliveryDate) > new Date();
+  }
+
   async addSupplyOrder() {
     const formData = new FormData();
     Object.keys(this.addSupplyOrderForm.value).forEach(key => {
-      if (key === 'OrderDate' || key === 'DeliveryDate')
-        formData.append(key, new Date(this.addSupplyOrderForm.value[key]).toISOString());
-      if (key)
-        formData.append(key, this.addSupplyOrderForm.value[key]);
+      if (this.addSupplyOrderForm.value[key]) {
+        if (key === 'OrderDate' || key === 'DeliveryDate')
+          formData.append(key, new Date(this.addSupplyOrderForm.value[key]).toISOString());
+        else
+          formData.append(key, this.addSupplyOrderForm.value[key]);
+      }
     });
 
     this.supplyOrderService.addSupplyOrder(formData).subscribe({
       next: () => this.updatePage(this.page, this.perPage)
     });
     await this.addSupplyOrderModal.close();
-
-    console.log(formData);
   }
 
   async deleteSupplyOrder(id: string) {
@@ -138,6 +146,12 @@ export class SupplyOrdersComponent implements OnInit {
       debounceTime(300),
       distinctUntilChanged())
       .subscribe(key => this.updatePage(this.page, this.perPage, key));
+  }
+
+  markSupplyOrdersAsDeliveredAndUpdateStock(id: string) {
+    this.supplyOrderService.markSupplyOrderAsDeliveredAndUpdateStock(id).subscribe({
+      next: () => this.updatePage(this.page, this.perPage)
+    });
   }
 
   exportToExcel() {
