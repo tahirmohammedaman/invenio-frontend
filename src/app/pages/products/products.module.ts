@@ -7,6 +7,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { ModalsModule } from 'src/app/_metronic/partials';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
     InlineSVGModule,
     ReactiveFormsModule,
     ModalsModule,
-    NgSelectModule
+    NgSelectModule,
+    NgbCarouselModule
   ]
 })
 export class ProductsModule { }

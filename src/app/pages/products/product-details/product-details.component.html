@@ -4,8 +4,13 @@
     <div class="container px-4 px-lg-5 my-5">
       <div class="row gx-8 gx-lg-10 align-items-center">
         <div class="col-md-6">
-          <img class="card-img-top mb-5 mb-md-0" [src]="staticUrl + product.Image1Path"
-            alt="...">
+          <!-- <img class="card-img-top mb-5 mb-md-0" [src]="staticUrl + product.Image1Path"
+            alt="..."> -->
+            <ngb-carousel>
+              <ng-template ngbSlide *ngFor="let image of product.ImagePaths">
+                <img [src]="staticUrl + image" alt="..." style="max-height: 500px; width: 100%;">
+              </ng-template>
+            </ngb-carousel>
         </div>
         <div class="col-md-6">
           <div class="small mb-1">SKU: {{ product.ProductId }}</div>

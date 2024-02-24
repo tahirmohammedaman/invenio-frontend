@@ -1,52 +1,5 @@
-<!-- <div class="container">
-  <div class="card mb-5 mb-xl-8 products-header-bar">
-    <div class="card-header border-0 pt-5 d-flex align-items-center justify-content-between">
-      <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Product Catalog</span>
-        <span class="text-muted mt-1 fw-bold fs-7"></span>
-      </h3>
-      <div class="card-toolbar d-flex align-items-center justify-content-center">
-        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
-          class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
-        <form class="form-inline">
-          <input type="text" #search class="form-control form-control-flush" name="search" value=""
-            placeholder="Search products" data-kt-search-element="input" (input)="searchProducts(search.value)" />
-        </form>
-        <a class="btn btn-sm btn-light-primary m-2" (click)="openAddProductModal()">
-          <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
-          Add Product
-        </a>
-        <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
-          <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
-          Export
-        </a>
-      </div>
-    </div>
-  </div>
-  
-  <div class="row d-flex justify-content-center mt-5">
-    <div class="col-4 card p-3 bg-white m-10" *ngFor="let product of products$ | async">
-      <i class="fa fa-apple"></i>
-      <div class="about-product text-center mt-2">
-        <img [src]="staticUrl + product.Image1Path" width="200">
-        <div>
-          <h4>{{ product.Name }}</h4>
-          <h6 class="mt-0 text-black-50">{{ product.Category.Name }}</h6>
-        </div>
-      </div>
-      <div class="stats mt-2">
-        <div class="d-flex justify-content-between p-price"><span>Price</span><span>${{ product.Price }}</span></div>
-        <div class="d-flex justify-content-between p-price"><span>Pro stand</span><span>$999</span></div>
-        <div class="d-flex justify-content-between p-price"><span>Vesa Mount Adapter</span><span>$199</span></div>
-      </div>
-      <div class="d-flex justify-content-between total fw-bold mt-4"><span>Total</span><span>$7,197.00</span>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div class="row g-10 g-xl-8">
-  <!-- Warehouses List -->
+  <!-- Products List -->
   <div class="col-sm-12 col-md-auto min-w-700px mr-auto">
     <div class="card card-xl-stretch mb-xl-8">
 
@@ -63,13 +16,13 @@
                 class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 ms-0"></span>
               <form class="form-inline">
                 <input type="text" #search class="form-control form-control-flush" name="search" value=""
-                  placeholder="Search warehouses" data-kt-search-element="input"
+                  placeholder="Search products" data-kt-search-element="input"
                   (input)="searchProducts(search.value)" />
               </form>
             </div>
             <a class="btn btn-sm btn-light-primary m-2" (click)="openAddProductModal()">
               <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" class="svg-icon svg-icon-3"></span>
-              Add Warehouse
+              Add Product
             </a>
             <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
               <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
@@ -101,7 +54,7 @@
               <tr *ngFor="let product of products$ | async">
                 <td>
                   <div class="symbol symbol-50px me-2">
-                    <img [src]="staticUrl + product.Image1Path"
+                    <img [src]="staticUrl + product.ImagePaths[0]"
                       class="svg-icon svg-icon-2x svg-icon-success">
                   </div>
                 </td>
@@ -501,40 +454,4 @@
       <button type="submit" class="btn btn-outline-warning">Save</button>
     </div>
   </form>
-</app-modal>
-
-<!-- Detail Product Modal -->
-<app-modal #detailProductModal [modalConfig]="detailProductModalConfig">
-  <div class="product-details">
-
-    <!-- Product section -->
-    <section class="py-5">
-      <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
-          <div class="col-md-6">
-            <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="...">
-          </div>
-          <div class="col-md-6">
-            <div class="small mb-1">SKU: BST-498</div>
-            <h1 class="display-5 fw-bolder">Shop item template</h1>
-            <div class="fs-5 mb-5">
-              <span class="text-decoration-line-through">$45.00</span>
-              <span>$40.00</span>
-            </div>
-            <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi.
-              Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea
-              iste laborum vero?</p>
-            <!-- <div class="d-flex">
-              <input id="inputQuantity" class="form-control text-center me-3" type="number" value="1"
-                style="max-width: 3rem">
-              <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                <i class="bi-cart-fill me-1"></i>
-                Add to cart
-              </button>
-            </div> -->
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
 </app-modal>

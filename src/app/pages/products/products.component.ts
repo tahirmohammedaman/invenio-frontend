@@ -62,10 +62,7 @@ export class ProductsComponent implements OnInit {
       Description: [''],
       CategoryId: ['', [Validators.required]],
       Price: ['', [Validators.required]],
-      Image1: ['', [Validators.required]],
-      Image2: [''],
-      Image3: [''],
-      Image4: [''],
+      Images: ['', [Validators.required]],
       MinimumOrderQuantity: [''],
       MaximumOrderQuantity: ['']
     });
@@ -76,22 +73,9 @@ export class ProductsComponent implements OnInit {
       Description: [''],
       CategoryId: ['', [Validators.required]],
       Price: ['', [Validators.required]],
-      Image1: ['', [Validators.required]],
-      Image2: [''],
-      Image3: [''],
-      Image4: [''],
+      Images: ['', [Validators.required]],
       MinimumOrderQuantity: [''],
       MaximumOrderQuantity: ['']
-    });
-
-    this.detailProductForm = this.formBuilder.group({
-      Name: [{ value: '', disabled: true }],
-      ShortDescription: [{ value: '', disabled: true }],
-      Description: [{ value: '', disabled: true }],
-      CategoryId: [{ value: '', disabled: true }],
-      Price: [{ value: '', disabled: true }],
-      MinimumOrderQuantity: [{ value: '', disabled: true }],
-      MaximumOrderQuantity: [{ value: '', disabled: true }],
     });
   }
 
@@ -142,36 +126,13 @@ export class ProductsComponent implements OnInit {
     this.editProductForm.reset();
   }
 
-  async openDetailProductModal(product: Product) {
-    this.detailProductForm.patchValue({
-      Name: product.Name,
-      ShortDescription: product.ShortDescription,
-      Description: product.Description,
-      CategoryId: product.Category?.CategoryId,
-      Price: product.Price,
-      MinimumOrderQuantity: product.MinimumOrderQuantity,
-      MaximumOrderQuantity: product.MaximumOrderQuantity
-    });
-
-    this.selectedProduct = product;
-    await this.detailProductModal.open();
-  }
-
-  async closeDetailProductModal() {
-    await this.detailProductModal.close();
-    this.detailProductForm.reset();
-  }
-
   onImageSelected(event: Event, form: FormGroup) {
     const target = event.target as HTMLInputElement;
-    const files: FileList = (target.files as FileList);
+    const fileList: FileList = target.files as FileList;
 
-    for (let i = 0; i < files.length; i++) {
-      const file: File = files[i];
-      form.patchValue({
-        [`Image${i + 1}`]: file
-      });
-    }
+    form.patchValue({
+      Images: Array.from(fileList)
+    });
   }
 
   validateInput(form: FormGroup, controlName: string): string {
@@ -184,7 +145,12 @@ export class ProductsComponent implements OnInit {
   async addProduct() {
     const formData = new FormData();
     Object.keys(this.addProductForm.value).forEach(key => {
-      if (key)
+      if (key == "Images") {
+        const files = this.addProductForm.value[key];
+        for (let i = 0; i < files.length; i++)
+          formData.append('Images', files[i]);
+      }
+      else if (key)
         formData.append(key, this.addProductForm.value[key]);
     });
 
@@ -197,7 +163,12 @@ export class ProductsComponent implements OnInit {
   async editProduct() {
     const formData = new FormData();
     Object.keys(this.editProductForm.value).forEach(key => {
-      if (key)
+      if (key == "Images") {
+        const files = this.editProductForm.value[key];
+        for (let i = 0; i < files.length; i++)
+          formData.append('Images', files[i]);
+      }
+      else if (key)
         formData.append(key, this.editProductForm.value[key] || '');
     });
 

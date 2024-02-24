@@ -7,10 +7,7 @@ export interface Product {
   Description: string;
   Category: Category;
   Price: number;
-  Image1Path: string;
-  Image2Path: string;
-  Image3Path: string;
-  Image4Path: string;
+  ImagePaths: string[];
   MinimumOrderQuantity: number;
   MaximumOrderQuantity: number;
 }

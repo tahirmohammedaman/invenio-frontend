@@ -92,7 +92,6 @@ export class ProductDetailsComponent implements OnInit {
     this.suppliers$ =
       this.supplierService.getSuppliers().pipe(map(res => res.value));
 
-    this.supplies$.subscribe(res => console.log(res));
     this.cdr.detectChanges();
   }
 
