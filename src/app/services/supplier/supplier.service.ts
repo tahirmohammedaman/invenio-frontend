@@ -28,15 +28,15 @@ export class SupplierService {
     return this.http.get<SupplierResponse>(this.baseUrl, { params: params });
   }
 
-  addSupplier(formData: FormData): Observable<Supplier> {
-    return this.http.post<Supplier>(this.baseUrl, formData);
+  addSupplier(formData: FormData): Observable<string> {
+    return this.http.post<string>(this.baseUrl, formData);
   }
 
-  editSupplier(id: string, formData: FormData): Observable<Supplier> {
-    return this.http.put<Supplier>(`${this.baseUrl}/${id}`, formData);
+  editSupplier(id: string, formData: FormData): Observable<string> {
+    return this.http.put<string>(`${this.baseUrl}/${id}`, formData);
   }
 
-  deleteSupplier(id: string): Observable<Supplier> {
-    return this.http.delete<Supplier>(`${this.baseUrl}/${id}`);
+  deleteSupplier(id: string): Observable<string> {
+    return this.http.delete<string>(`${this.baseUrl}/${id}`);
   }
 }

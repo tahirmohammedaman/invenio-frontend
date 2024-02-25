@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { Warehouse } from 'src/app/services/warehouse/warehouse';
 import { WarehouseService } from 'src/app/services/warehouse/warehouse.service';
 import { BaseUrl } from 'src/app/services/base-url';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-supply-orders',
@@ -47,7 +48,8 @@ export class SupplyOrdersComponent implements OnInit {
     private productService: ProductService,
     private formBuilder: FormBuilder,
     private warehouseService: WarehouseService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addSupplyOrderForm = this.formBuilder.group({
@@ -128,14 +130,22 @@ export class SupplyOrdersComponent implements OnInit {
     });
 
     this.supplyOrderService.addSupplyOrder(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Supply order created successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while creating supply order')
     });
     await this.addSupplyOrderModal.close();
   }
 
   async deleteSupplyOrder(id: string) {
     this.supplyOrderService.deleteSupplyOrder(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Supply order cancelled successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while cancelling supply order')
     });
   }
 
@@ -150,7 +160,11 @@ export class SupplyOrdersComponent implements OnInit {
 
   markSupplyOrdersAsDeliveredAndUpdateStock(id: string) {
     this.supplyOrderService.markSupplyOrderAsDeliveredAndUpdateStock(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Supply order marked as delivered successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while updating supply order')
     });
   }
 

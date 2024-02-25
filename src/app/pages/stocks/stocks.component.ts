@@ -11,6 +11,7 @@ import { WarehouseService } from 'src/app/services/warehouse/warehouse.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { BaseUrl } from 'src/app/services/base-url';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-stocks',
@@ -50,7 +51,8 @@ export class StocksComponent {
     private productService: ProductService,
     private warehouseService: WarehouseService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addStockForm = this.formBuilder.group({
@@ -133,7 +135,11 @@ export class StocksComponent {
     });
 
     this.stockService.addStock(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Product stock added successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while adding product stock')
     });
     await this.closeAddStockModal();
   }
@@ -146,14 +152,22 @@ export class StocksComponent {
     });
 
     this.stockService.editStock(this.selectedStock.StockId, formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Product stock updated successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while updating product stock')
     });
     await this.closeEditStockModal();
   }
 
   async deleteStock(stockId: string) {
     this.stockService.deleteStock(stockId).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Product stock deleted successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while deleting product stock')
     });
   }
 

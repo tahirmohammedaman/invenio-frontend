@@ -13,6 +13,7 @@ import { Warehouse } from 'src/app/services/warehouse/warehouse';
 import { WarehouseService } from 'src/app/services/warehouse/warehouse.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-sale-orders',
@@ -47,7 +48,8 @@ export class SaleOrdersComponent {
     private customerService: CustomerService,
     private warehouseService: WarehouseService,
     private formBuilder: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
     this.addSaleOrderForm = this.formBuilder.group({
       ProductId: ['', [Validators.required]],
@@ -124,14 +126,22 @@ export class SaleOrdersComponent {
     });
 
     this.saleOrderService.addSaleOrder(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Sale order created successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while adding sale order')
     });
     await this.orderModal.close();
   }
 
   async deleteSaleOrder(id: string) {
     this.saleOrderService.deleteSaleOrder(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Sale order cancelled successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while cancelling sale order')
     });
   }
 

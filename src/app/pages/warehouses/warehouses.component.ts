@@ -6,6 +6,7 @@ import { Warehouse } from 'src/app/services/warehouse/warehouse';
 import { WarehouseService } from 'src/app/services/warehouse/warehouse.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-warehouses',
@@ -38,7 +39,8 @@ export class WarehousesComponent {
   constructor(
     private warehouseService: WarehouseService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addWarehouseForm = this.formBuilder.group({
@@ -127,7 +129,11 @@ export class WarehousesComponent {
     });
 
     this.warehouseService.addWarehouse(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Warehouse added successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while adding warehouse')
     });
     await this.addModal.close();
   }
@@ -139,7 +145,11 @@ export class WarehousesComponent {
     });
 
     this.warehouseService.editWarehouse(this.selectedWarehouse.WarehouseId, formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Warehouse updated successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while updating warehouse')
     });
 
     await this.editModal.close();
@@ -147,7 +157,11 @@ export class WarehousesComponent {
 
   async deleteWarehouse(id: string) {
     this.warehouseService.deleteWarehouse(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Warehouse deleted successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while deleting warehouse')
     });
   }
 

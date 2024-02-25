@@ -7,6 +7,7 @@ import { CategoryService } from 'src/app/services/category/category.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { BaseUrl } from 'src/app/services/base-url';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-categories',
@@ -42,7 +43,8 @@ export class CategoriesComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addCategoryForm = this.formBuilder.group({
@@ -124,7 +126,11 @@ export class CategoriesComponent implements OnInit {
     });
 
     this.categoryService.addCategory(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Category added successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while adding category')
     });
     await this.addModal.close();
   }
@@ -136,7 +142,11 @@ export class CategoriesComponent implements OnInit {
     });
 
     this.categoryService.editCategory(this.selectedCategory.CategoryId, formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Category updated successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while updating category')
     });
 
     await this.editModal.close();
@@ -144,7 +154,11 @@ export class CategoriesComponent implements OnInit {
 
   async deleteCategory(id: string) {
     this.categoryService.deleteCategory(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Category deleted successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while deleting category')
     });
   }
 

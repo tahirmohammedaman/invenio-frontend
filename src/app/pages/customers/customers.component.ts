@@ -7,6 +7,7 @@ import { Customer } from 'src/app/services/customer/customer';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-customers',
@@ -42,7 +43,8 @@ export class CustomersComponent {
   constructor(
     private customerService: CustomerService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addCustomerForm = this.formBuilder.group({
@@ -139,7 +141,11 @@ export class CustomersComponent {
     });
 
     this.customerService.addCustomer(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Customer added successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while adding customer')
     });
     await this.addModal.close();
   }
@@ -151,14 +157,22 @@ export class CustomersComponent {
     });
 
     this.customerService.editCustomer(this.selectedCustomer.CustomerId, formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Customer updated successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while updating customer')
     });
     await this.editModal.close();
   }
 
   async deleteCustomer(id: string) {
     this.customerService.deleteCustomer(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Customer deleted successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while deleting customer')
     });
   }
 

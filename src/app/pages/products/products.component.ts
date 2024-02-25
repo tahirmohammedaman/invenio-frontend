@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Category } from 'src/app/services/category/category';
 import { BaseUrl } from 'src/app/services/base-url';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 
 @Component({
   selector: 'app-products',
@@ -53,7 +54,8 @@ export class ProductsComponent implements OnInit {
     private productService: ProductService,
     private categoryService: CategoryService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addProductForm = this.formBuilder.group({
@@ -155,7 +157,11 @@ export class ProductsComponent implements OnInit {
     });
 
     this.productService.addProduct(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Product added successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while adding product')
     });
     await this.addProductModal.close();
   }
@@ -173,14 +179,22 @@ export class ProductsComponent implements OnInit {
     });
 
     this.productService.editProduct(this.selectedProduct.ProductId, formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Product updated successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while updating product')
     });
     await this.editProductModal.close();
   }
 
   async deleteProduct(productId: string) {
     this.productService.deleteProduct(productId).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Product deleted successfully');
+      },
+      error: () => this.toastService.showError('An error occurred while deleting product')
     });
   }
 

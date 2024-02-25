@@ -7,6 +7,7 @@ import { SupplierService } from 'src/app/services/supplier/supplier.service';
 import FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { BaseUrl } from 'src/app/services/base-url';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';;
 
 @Component({
   selector: 'app-suppliers',
@@ -42,7 +43,8 @@ export class SuppliersComponent implements OnInit {
   constructor(
     private supplierService: SupplierService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private toastService: ToastService
   ) {
 
     this.addSupplierForm = this.formBuilder.group({
@@ -142,7 +144,11 @@ export class SuppliersComponent implements OnInit {
     });
 
     this.supplierService.addSupplier(formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Supplier added successfully.');
+      },
+      error: () => this.toastService.showError('An error occurred while adding supplier.')
     });
     await this.closeAddModal();
   }
@@ -154,7 +160,11 @@ export class SuppliersComponent implements OnInit {
     });
 
     this.supplierService.editSupplier(this.selectedSupplier.SupplierId, formData).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Supplier updated successfully.');
+      },
+      error: () => this.toastService.showError('An error occurred while updating supplier.')
     });
 
     await this.closeEditModal();
@@ -162,7 +172,11 @@ export class SuppliersComponent implements OnInit {
 
   async deleteSupplier(id: string) {
     this.supplierService.deleteSupplier(id).subscribe({
-      next: () => this.updatePage(this.page, this.perPage)
+      next: () => {
+        this.updatePage(this.page, this.perPage);
+        this.toastService.showSuccess('Supplier deleted successfully.');
+      },
+      error: () => this.toastService.showError('An error occurred while deleting supplier.')
     });
   }
 
