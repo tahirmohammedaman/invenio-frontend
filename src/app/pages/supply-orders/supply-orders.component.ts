@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, debounce, debounceTime, distinctUntilChanged, map, of } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, map, of } from 'rxjs';
 import { ModalComponent } from 'src/app/_metronic/partials';
 import { Product } from 'src/app/services/product/product';
 import { ProductService } from 'src/app/services/product/product.service';
@@ -41,6 +41,8 @@ export class SupplyOrdersComponent implements OnInit {
   }
 
   addSupplyOrderForm: FormGroup;
+
+  scannerEnabled: boolean = false;
 
   constructor(
     private supplyOrderService: SupplyOrderService,
@@ -96,6 +98,15 @@ export class SupplyOrdersComponent implements OnInit {
         return res.value;
       }));
     this.cdr.detectChanges();
+  }
+
+  enableScanner() {
+    this.scannerEnabled = !this.scannerEnabled;
+  }
+
+  scanSuccess($event: any) {
+    this.scannerEnabled = false;
+    this.markSupplyOrdersAsDeliveredAndUpdateStock($event);
   }
 
   openAddSupplyOrderModal() {
@@ -164,7 +175,10 @@ export class SupplyOrdersComponent implements OnInit {
         this.updatePage(this.page, this.perPage);
         this.toastService.showSuccess('Supply order marked as delivered successfully');
       },
-      error: () => this.toastService.showError('An error occurred while updating supply order')
+      error: (res) => {
+        this.toastService.showError(res.error || 'An error occurred while updating supply order');
+        this.cdr.markForCheck();
+      }
     });
   }
 

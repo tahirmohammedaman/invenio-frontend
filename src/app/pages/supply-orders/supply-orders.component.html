@@ -1,3 +1,7 @@
+<!-- Zxing Scanner ~ -->
+<zxing-scanner *ngIf="scannerEnabled" #scanner (scanSuccess)="scanSuccess($event)">
+</zxing-scanner>
+
 <!-- Supply Orders List -->
 <div class="card mb-5 mb-xl-8 w-100">
   <!-- begin::Header -->
@@ -23,6 +27,10 @@
       <a class="btn btn-sm btn-light-danger m-2" (click)="exportToExcel()">
         <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" class="svg-icon svg-icon-3"></span>
         Export
+      </a>
+      <a class="btn btn-sm btn-light-info m-2" (click)="enableScanner()">
+        <span [inlineSVG]="'./assets/media/icons/duotune/social/soc005.svg'" class="svg-icon svg-icon-3"></span>
+        Scan
       </a>
     </div>
   </div>
@@ -89,11 +97,12 @@
                 'badge-light-warning': !supplyOrder.IsDelivered && checkOverdue(supplyOrder.DeliveryDate),
                 'badge-light-danger': !supplyOrder.IsDelivered && !checkOverdue(supplyOrder.DeliveryDate)
               }">
-                {{ supplyOrder.IsDelivered ? 'Delivered' : checkOverdue(supplyOrder.DeliveryDate) ? 'Pending' : 'Overdue' }}
+                {{ supplyOrder.IsDelivered ? 'Delivered' : checkOverdue(supplyOrder.DeliveryDate) ? 'Pending' :
+                'Overdue' }}
               </span>
-            </td>                       
+            </td>
             <td class="text-end">
-              <a class="btn btn-icon btn-active-color-success btn-sm me-1" *ngIf="!supplyOrder.IsDelivered"
+              <a class="btn btn-icon btn-active-color-success btn-sm me-1" 
                 (click)="markSupplyOrdersAsDeliveredAndUpdateStock(supplyOrder.SupplyOrderId)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen043.svg'"
                   class="svg-icon svg-icon-3"></span>
@@ -154,7 +163,7 @@
   <form [formGroup]="addSupplyOrderForm" (ngSubmit)="addSupplyOrder()">
     <div class="row g-10 mb-6">
       <div class="form-group col-md-6 col-sm-12">
-        <label for="product" class="h6">Product</label>
+        <label for="product" class="h6 required">Product</label>
         <ng-select formControlName="ProductId" placeholder="Select Product" [virtualScroll]="true">
           <ng-option *ngFor="let product of products$ | async" [value]="product.ProductId">
             {{ product.Name }}
@@ -165,8 +174,8 @@
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="supplier" class="h6">Supplier</label>
-        <ng-select [disabled]="!(supplies$ | async)" formControlName="SupplyId" placeholder="Select Supplier"
+        <label for="supplier" class="h6 required">Supplier</label>
+        <ng-select formControlName="SupplyId" placeholder="Select Supplier"
           [virtualScroll]="true">
           <ng-option *ngFor="let supply of supplies$ | async" [value]="supply.SupplyId">
             {{ supply.Supplier.Name }}
@@ -177,7 +186,7 @@
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="warehouse" class="h6">Warehouse</label>
+        <label for="warehouse" class="h6 required">Warehouse</label>
         <ng-select formControlName="WarehouseId" placeholder="Select Warehouse" [virtualScroll]="true">
           <ng-option *ngFor="let warehouse of warehouses$ | async" [value]="warehouse.WarehouseId">
             {{ warehouse.Name }}
@@ -188,14 +197,14 @@
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="price" class="h6">Price</label>
+        <label for="price" class="h6 required">Price</label>
         <input formControlName="Price" type="number" class="form-control" id="price" placeholder="Enter price">
         <span class="text-danger">
           {{ validateInput(addSupplyOrderForm, "Price") }}
         </span>
       </div>
       <div class="form-group col-md-6 col-sm-12">
-        <label for="quantity" class="h6">Quantity</label>
+        <label for="quantity" class="h6 required">Quantity</label>
         <input formControlName="Quantity" type="number" class="form-control" id="quantity" placeholder="Enter quantity">
         <span class="text-danger">
           {{ validateInput(addSupplyOrderForm, "Quantity") }}

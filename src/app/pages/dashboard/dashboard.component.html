@@ -141,18 +141,10 @@
               }}</span>
             <span class="text-muted fw-bold d-block">{{ stock.Warehouse.Name }}</span>
           </div>
-          <!-- end::Description -->
-          <!-- Under stock percentage -->
-          <!-- <span class="badge fs-8 fw-bolder" [ngClass]="{
-            'badge-light-warning': +(((stock.StockQuantity * stock.QuantityPerUnit) / stock.LowStockThreshold).toFixed(2)) > 0.5,
-            'badge-light-danger': +(((stock.StockQuantity * stock.QuantityPerUnit) / stock.LowStockThreshold).toFixed(2)) < 0.5
-            }">{{ +(((stock.StockQuantity * stock.QuantityPerUnit) /
-            stock.LowStockThreshold).toFixed(2)) * 100 }}%</span> -->
-
           <div class="d-flex flex-column me-2">
             <div class="d-flex flex-stack mb-2">
               <span class="text-muted me-2 fs-7 fw-bold">
-                {{ +(((stock.StockQuantity * stock.QuantityPerUnit) / stock.LowStockThreshold).toFixed(2)) * 100 }}%
+                {{ (((stock.StockQuantity * stock.QuantityPerUnit) / stock.LowStockThreshold) * 100).toFixed(0) }}%
               </span>
             </div>
             <div class="progress h-6px w-100">

@@ -1,15 +1,15 @@
 import { Component, TemplateRef } from '@angular/core';
 import { ToastService } from './toast.service';
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-toast',
   standalone: true,
-  imports: [NgbToastModule, NgIf, NgTemplateOutlet, NgFor],
+  imports: [NgbToastModule, NgIf, NgTemplateOutlet, NgFor, AsyncPipe],
   template: `
 		<ngb-toast
-			*ngFor="let toast of toastService.toasts"
+*ngFor="let toast of toastService.toasts"
       class="text-white"
 			[class]="toast.classname"
       [header]="toast.header" 

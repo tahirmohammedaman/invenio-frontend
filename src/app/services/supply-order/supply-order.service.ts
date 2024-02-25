@@ -38,7 +38,7 @@ export class SupplyOrderService {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  markSupplyOrderAsDeliveredAndUpdateStock(id: string) {
-    return this.http.post(`${this.baseUrl}/${id}/delivery`, {});
+  markSupplyOrderAsDeliveredAndUpdateStock(id: string): Observable<any> {
+    return this.http.post<string>(`${this.baseUrl}/${id}/delivery`, {});
   }
 }
