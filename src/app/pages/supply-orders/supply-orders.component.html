@@ -102,7 +102,7 @@
               </span>
             </td>
             <td class="text-end">
-              <a class="btn btn-icon btn-active-color-success btn-sm me-1" 
+              <a class="btn btn-icon btn-active-color-success btn-sm me-1" *ngIf="!supplyOrder.IsDelivered"
                 (click)="markSupplyOrdersAsDeliveredAndUpdateStock(supplyOrder.SupplyOrderId)">
                 <span [inlineSVG]="'./assets/media/icons/duotune/general/gen043.svg'"
                   class="svg-icon svg-icon-3"></span>

@@ -33,7 +33,7 @@ export class WarehouseService {
   }
 
   editWarehouse(id: string, formData: FormData) : Observable<Warehouse> {
-    return this.http.put<Warehouse>(`${this.baseUrl}/${id}`, formData);
+    return this.http.patch<Warehouse>(`${this.baseUrl}/${id}`, formData);
   }
 
   deleteWarehouse(id: string) : Observable<Warehouse> {

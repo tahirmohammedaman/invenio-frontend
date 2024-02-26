@@ -38,7 +38,7 @@ export class ProductService {
   }
 
   editProduct(id: string, formData: FormData) : Observable<Product>{
-    return this.http.put<Product>(`${this.baseUrl}/${id}`, formData);
+    return this.http.patch<Product>(`${this.baseUrl}/${id}`, formData);
   }
 
   deleteProduct(id: string) : Observable<Product>{

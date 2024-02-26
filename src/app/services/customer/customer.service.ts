@@ -33,7 +33,7 @@ export class CustomerService {
   }
 
   editCustomer(id: string, formData: FormData) {
-    return this.http.put(`${this.baseUrl}/${id}`, formData);
+    return this.http.patch(`${this.baseUrl}/${id}`, formData);
   }
 
   deleteCustomer(id: string) {

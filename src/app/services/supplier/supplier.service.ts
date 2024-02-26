@@ -33,7 +33,7 @@ export class SupplierService {
   }
 
   editSupplier(id: string, formData: FormData): Observable<string> {
-    return this.http.put<string>(`${this.baseUrl}/${id}`, formData);
+    return this.http.patch<string>(`${this.baseUrl}/${id}`, formData);
   }
 
   deleteSupplier(id: string): Observable<string> {

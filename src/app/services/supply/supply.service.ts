@@ -34,7 +34,7 @@ export class SupplyService {
   }
 
   editSupply(id: string, formData: FormData) {
-    return this.http.put(`${this.baseUrl}/${id}`, formData);
+    return this.http.patch(`${this.baseUrl}/${id}`, formData);
   }
 
   deleteSupply(id: string) {

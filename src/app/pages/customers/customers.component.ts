@@ -43,7 +43,7 @@ export class CustomersComponent {
   constructor(
     private customerService: CustomerService,
     private formBuilder: FormBuilder,
-    private changeDetector: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     private toastService: ToastService
   ) {
 
@@ -83,7 +83,7 @@ export class CustomersComponent {
         this.totalCount$ = of(response["@odata.count"]);
         return response.value;
       }));
-    this.changeDetector.detectChanges();
+    this.cdr.detectChanges();
   }
 
   async openAddModal() {

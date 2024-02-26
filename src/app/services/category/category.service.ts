@@ -34,7 +34,7 @@ export class CategoryService {
   }
 
   editCategory(id: string, formData: FormData): Observable<Category> {
-    return this.http.put<Category>(`${this.baseUrl}/${id}`, formData);
+    return this.http.patch<Category>(`${this.baseUrl}/${id}`, formData);
   }
 
   deleteCategory(id: string): Observable<Category> {
