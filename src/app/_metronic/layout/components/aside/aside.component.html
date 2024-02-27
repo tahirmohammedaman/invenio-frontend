@@ -33,23 +33,23 @@
 <!-- end::Aside menu -->
 
 <!--begin::Footer-->
-<div class="aside-footer flex-column-auto px-9" id="kt_aside_footer">
+<div class="aside-footer flex-column-auto px-9" id="kt_aside_footer" *ngIf="user$ | async as user">    
   <!--begin::User panel-->
   <div class="d-flex flex-stack">
     <!--begin::Wrapper-->
     <div class="d-flex align-items-center">
       <!--begin::Avatar-->
       <div class="symbol symbol-circle symbol-40px">
-        <img src="./assets/media/avatars/300-1.jpg" alt="photo">
+        <img [src]="baseUrl + user.displayImage" alt="photo">
       </div>
       <!--end::Avatar-->
       <!--begin::User info-->
       <div class="ms-2">
         <!--begin::Name-->
-        <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder lh-1">Paul Melone</a>
+        <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder lh-1 p-2">{{ user.displayName }}</a>
         <!--end::Name-->
         <!--begin::Major-->
-        <span class="text-muted fw-bold d-block fs-7 lh-1">Python Dev</span>
+        <span class="text-muted fw-bold d-block fs-7 lh-1 m-1">{{ user.email }}</span>
         <!--end::Major-->
       </div>
       <!--end::User info-->
@@ -59,17 +59,18 @@
     <!--begin::User menu-->
     <div class="ms-1">
       <!-- begin::Toggle -->
-      <div
+      <a
         class="btn btn-sm btn-icon btn-active-color-primary position-relative me-n2"
         data-kt-menu-trigger="click"
         data-kt-menu-attach="parent"
         data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom"
+        (click)="logout()"
       >
-        <img src="./assets/media/icons/duotune/coding/cod001.svg" alt="metronic" />
-      </div>
+        <img src="./assets/media/icons/duotune/arrows/arr077.svg" alt="metronic" />
+    </a>
       <!-- end::Toggle  -->
-      <app-user-inner></app-user-inner>
+      <!-- <app-user-inner></app-user-inner> -->
 
     </div>
     <!--end::User menu-->

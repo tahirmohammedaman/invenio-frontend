@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription, throwError } from 'rxjs';
 import { map, catchError, switchMap, finalize } from 'rxjs/operators';
 import { UserModel } from '../models/user.model';
@@ -52,28 +52,13 @@ export class AuthService implements OnDestroy {
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password).pipe(
       map((loginResponse: HttpResponse<any> | HttpErrorResponse)=>{
-        if(loginResponse instanceof HttpResponse)
-        return this.setAuthFromLocalStorage(loginResponse.body) ? loginResponse : new HttpErrorResponse({status: -1 , statusText: 'Something went wrong! @auth.se'})
+        if(loginResponse instanceof HttpResponse && loginResponse.status === 200)
+        return this.setAuthFromLocalStorage(loginResponse.body) ? loginResponse : new Error('Invalid response')
       }), catchError((error: any)=>{
         return throwError(() => error);
       }),
       finalize(() => this.isLoadingSubject.next(false))
     )
-    /*
-    .pipe(
-      map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
-        return result;
-      }),
-      switchMap(() => this.getUserByToken()),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
-      
-      finalize(() => this.isLoadingSubject.next(false))
-    );
-    */
   }
 
   logout() {
@@ -154,13 +139,12 @@ export class AuthService implements OnDestroy {
     return false;
   }
 
-  private getAuthFromLocalStorage(): AuthModel | undefined {
+  public getAuthFromLocalStorage(): AuthModel | undefined {
     try {
       const lsValue = localStorage.getItem(this.authLocalStorageToken);
       if (!lsValue) {
         return undefined;
       }
-
       const authData = JSON.parse(lsValue);
       return authData;
     } catch (error) {

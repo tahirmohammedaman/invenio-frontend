@@ -3,9 +3,10 @@ import { BehaviorSubject, Observable, Subscription, catchError, concatMap, of, t
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { UserModel } from '../../models/user.model';
 import { environment } from '../../../../../environments/environment';
-import { AuthModel } from '../../models/auth.model';
+import { AuthModel, LoginResponse } from '../../models/auth.model';
 import { BaseUrl } from 'src/app/services/base-url';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
+import { AuthService } from '../auth.service';
 
 const API_USERS_URL = `${environment.apiUrl}/auth`;
 
@@ -27,22 +28,25 @@ export class AuthHTTPService {
     formdata.append('Email', email);
     formdata.append('Password', password);
 
-    return this.http.post(LOGIN_URL, formdata , { observe: 'response' }).pipe (
-      concatMap((response: HttpResponse<{}>) => {
-        const decodedToken = jwtDecode<JwtPayload>((response.body as {Token?:string})?.Token || '');
+    return this.http.post<LoginResponse>(LOGIN_URL, formdata).pipe (
+      concatMap(response => {
+        const decodedToken = jwtDecode<JwtPayload>(response.Token || '');
         const auth = new AuthModel();
-        auth.authToken = (response.body as {Token?: string})?.Token || '';
-        auth.refreshToken = '';
+        auth.authToken = response.Token || '';
         auth.expiresIn = decodedToken.exp? new Date(decodedToken.exp * 1000): null;
-        auth.displayImage = "";
-        auth.displayName = '';
+        auth.displayImage = response.DisplayImage || '';
+        auth.displayName = response.DisplayName || '';
+        auth.email = response.Email || '';
+        auth.role = response.Role || '';
+
+        auth.setAuth(auth);
 
         return of(new HttpResponse({status: 200, body: auth}));
       }),
       catchError((error: HttpErrorResponse)=>{
         return throwError(()=> error);
       })
-    ) 
+    )
   }
 
   // CREATE =>  POST: add a new user to the server
