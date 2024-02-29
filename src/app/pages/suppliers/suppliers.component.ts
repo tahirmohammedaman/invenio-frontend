@@ -186,7 +186,7 @@ export class SuppliersComponent implements OnInit {
     this.searchKey$.pipe(
       debounceTime(300),        // Debounce for 300ms to reduce unnecessary calls
       distinctUntilChanged())    // Only proceed if the search key has changed
-      .subscribe(key => this.updatePage(this.page, this.perPage, key));
+      .subscribe(key => this.updatePage(1, this.perPage, key));
 
   };
 

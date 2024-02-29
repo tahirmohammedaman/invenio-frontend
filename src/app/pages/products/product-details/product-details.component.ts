@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { PageInfoService, PageLink } from 'src/app/_metronic/layout';
+import { ToastService } from 'src/app/_metronic/layout/ngb-toast/toast.service';
 import { ModalComponent } from 'src/app/_metronic/partials';
 import { BaseUrl } from 'src/app/services/base-url';
 import { Product } from 'src/app/services/product/product';
@@ -54,7 +55,8 @@ export class ProductDetailsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
     private pageInfo: PageInfoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastService
   ) {
 
     this.addSupplyForm = this.formBuilder.group({
@@ -123,7 +125,7 @@ export class ProductDetailsComponent implements OnInit {
   async addSupply() {
     const formData = new FormData();
     Object.keys(this.addSupplyForm.value).forEach(key => {
-      if (key)
+      if (this.addSupplyForm.value[key] !== '' && this.addSupplyForm.value[key] !== null)
         formData.append(key, this.addSupplyForm.value[key]);
     });
 
@@ -134,8 +136,10 @@ export class ProductDetailsComponent implements OnInit {
       next: () => {
         this.supplies$ =
           this.supplyService.getSuppliesForProduct(productId).pipe(map(res => res.value))
+        this.toast.showSuccess('Supply added successfully');
         this.cdr.detectChanges();
-      }
+      },
+      error: () => this.toast.showError('An error occurred while adding supply')
     });
 
     await this.closeAddSupplyModal();
@@ -146,8 +150,10 @@ export class ProductDetailsComponent implements OnInit {
       next: () => {
         const productId = (this.route.snapshot.paramMap.get('id') as string);
         this.supplies$ = this.supplyService.getSuppliesForProduct(productId).pipe(map(res => res.value));
+        this.toast.showSuccess('Supply deleted successfully');
         this.cdr.detectChanges();
-      }
+      },
+      error: () => this.toast.showError('An error occurred while deleting supply')
     });
   }
 }

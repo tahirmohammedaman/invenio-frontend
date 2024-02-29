@@ -177,7 +177,7 @@ export class StocksComponent {
     this.searchKey$.pipe(
       debounceTime(300),
       distinctUntilChanged())
-      .subscribe(key => this.updatePage(this.page, this.perPage, key));
+      .subscribe(key => this.updatePage(1, this.perPage, key));
   }
 
   exportToExcel() {
