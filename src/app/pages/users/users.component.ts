@@ -84,7 +84,7 @@ export class UsersComponent implements OnInit {
     this.pageInfoService.updateTitle('Authorized Users');
 
     this.updateAdmins(this.adminPage, this.adminPerPage);
-    this.updateAuditors(this.auditorPage, this.auditorPage);
+    this.updateAuditors(this.auditorPage, this.auditorPerPage);
 
     this.addAdminForm.get('AutoGeneratePassword')?.valueChanges.subscribe(bool => {
       if (bool) this.addAdminForm.get('Password')?.disable();

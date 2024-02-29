@@ -75,7 +75,7 @@ export class ProductsComponent implements OnInit {
       Description: [''],
       CategoryId: ['', [Validators.required]],
       Price: ['', [Validators.required]],
-      Images: ['', [Validators.required]],
+      Images: [''],
       MinimumOrderQuantity: [''],
       MaximumOrderQuantity: ['']
     });

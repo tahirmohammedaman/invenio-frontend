@@ -1,3 +1,3 @@
 export class BaseUrl {
-  static url = 'https://localhost:5107/api';
+  static url = 'https://192.168.73.157:5107/api';
 }

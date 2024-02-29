@@ -52,13 +52,13 @@
             <td>
               <div class="d-flex align-items-center">
                 <div class="symbol symbol-50px me-5">
-                  <img [src]="staticUrl + saleOrder.Product.ImagePaths[0]" class="" alt="" />
+                  <img [routerLink]="'/products/details/' + saleOrder.Product.ProductId" [src]="staticUrl + saleOrder.Product.ImagePaths[0]" class="" alt="" />
                 </div>
                 <div class="d-flex justify-content-start flex-column">
-                  <a href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
+                  <a [routerLink]="'/products/details/' + saleOrder.Product.ProductId" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
                     {{ saleOrder.Product.Name }}
                   </a>
-                  <span class="text-muted fw-bold text-muted d-block fs-7">
+                  <span [routerLink]="'/products/details/' + saleOrder.Product.ProductId" class="text-muted fw-bold text-muted d-block fs-7">
                     {{ saleOrder.Product.ProductId }}
                   </span>
                 </div>

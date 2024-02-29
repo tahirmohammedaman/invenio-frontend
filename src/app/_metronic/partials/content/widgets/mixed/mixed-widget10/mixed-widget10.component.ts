@@ -7,6 +7,7 @@ import { getCSSVariableValue } from '../../../../../kt/_utils';
 export class MixedWidget10Component implements OnInit {
   @Input() chartColor: string = '';
   @Input() chartHeight: string;
+  @Input() sales: number;
   chartOptions: any = {};
 
   constructor() {}

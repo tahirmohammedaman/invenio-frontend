@@ -3,7 +3,7 @@
     <div class="d-flex flex-stack flex-wrap">
       <div class="me-2">
         <a href="#" class="text-dark text-hover-primary fw-bolder fs-3">
-          Generate Reports
+          Total sales
         </a>
 
         <div class="text-muted fs-7 fw-bold">
@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="fw-bolder fs-3" [ngClass]="'text-' + chartColor">$24,500</div>
+      <div class="fw-bolder fs-3" [ngClass]="'text-' + chartColor">{{ sales.toLocaleString('en-US', {style: 'currency', currency: 'ETB'} ) }}</div>
     </div>
   </div>
 

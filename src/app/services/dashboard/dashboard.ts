@@ -16,6 +16,10 @@ export interface DashboardDto {
     SupplyOrder: SupplyOrder;
   }];
 
+  TotalSales: number;
+  TotalSalesThisMonth: number;
+  TotalSalesThisMonthIncrease: number;
+
   LowStocks: Stock[];
 
   TopProducts: [{

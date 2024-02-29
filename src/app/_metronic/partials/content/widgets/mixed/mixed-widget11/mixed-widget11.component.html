@@ -12,12 +12,15 @@
     <div class="me-2">
       <span class="fw-bolder text-gray-800 d-block fs-3">Sales</span>
 
-      <span class="text-gray-400 fw-bold">Oct 8 - Oct 26 2021</span>
+      <span class="text-gray-400 fw-bold">This Month</span>
     </div>
 
     <div class="fw-bolder fs-3" [ngClass]="'fs-3 text-' + chartColor">
-      $15,300
+      {{ sales.toLocaleString('en-US', {style: 'currency', currency: 'ETB'} ) }}
     </div>
+    <span class="badge fs-8 fw-bolder" [ngClass]="salesIncrease > 0 ? 'badge-light-success' : 'badge-light-danger'">
+      {{ salesIncrease }}%
+    </span>
   </div>
 
   <div #chartRef class="mixed-widget-10-chart" [style.height]="chartHeight">
