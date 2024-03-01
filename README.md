@@ -1,27 +1,55 @@
-# Demo3
+# Invenio — Inventory Management Console
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.x.x.
+**Frontend client** for **Invenio**, an inventory and warehouse management system. Manage products, stock across multiple warehouses, suppliers, customers, and orders — and close out incoming deliveries by scanning a code with your phone instead of hunting through a table.
 
-## Development server
+🔗 Backend API: [invenio-backend](https://github.com/tahirmohammedaman/invenio-backend)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+- **Dashboard** — at-a-glance KPIs and charts (ApexCharts) summarizing stock, orders, and sales activity.
+- **Product & category management** — CRUD with image uploads and pricing/order-quantity rules.
+- **Multi-warehouse stock** — track quantity, SKU, and low-stock thresholds per warehouse.
+- **Supply orders (restocking)** — create and track orders against suppliers, with lead-time-driven delivery estimates.
+- **Sale orders** — manage customer orders against live stock.
+- **Suppliers & customers** — full directory management.
+- **User management** — role-aware access (Admin vs. standard users) backed by JWT.
+- **Search, pagination & export** — every list view is server-driven via OData query params, with one-click Excel export (`xlsx` + `file-saver`).
+- **Internationalization** — multi-language UI via `ngx-translate`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Hardware-friendly delivery confirmation
 
-## Build
+Confirming that a supply order has physically arrived is normally a desk job — this app turns it into a one-tap phone action:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **QR / barcode scanning** — the Supply Orders page embeds a live camera scanner (`@zxing/ngx-scanner`) right in the browser. A warehouse worker scans a QR code or barcode on the incoming shipment, and the app immediately calls the delivery-confirmation endpoint for that order — no searching a table, no manual clicks. Stock levels update automatically the moment the scan succeeds.
+- **RFID from a microcontroller** — because the underlying API call is a plain authenticated POST keyed by order ID, the same delivery flow extends naturally to a **dock-mounted RFID reader on a microcontroller** (ESP32/Arduino-class hardware), letting a tagged pallet trigger the exact same stock update with zero human interaction at the door. *(Hardware integration lives on the [invenio-backend](https://github.com/tahirmohammedaman/invenio-backend) side, which exposes the endpoint this scan hits.)*
 
-## Running unit tests
+## Tech stack
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+| Layer | Technology |
+|---|---|
+| Framework | Angular 16 |
+| UI | Angular Material + ng-bootstrap + Bootstrap 5 (Metronic-based admin layout) |
+| Charts | ApexCharts (`ng-apexcharts`) |
+| Scanning | `@zxing/ngx-scanner` / `@zxing/browser` — camera-based QR/barcode scanning |
+| State/data | RxJS, Angular services calling an OData-flavored REST API |
+| Auth | JWT (`jwt-decode`), route guards |
+| i18n | `@ngx-translate` |
+| Export | `xlsx` + `file-saver` |
 
-## Running end-to-end tests
+## Getting started
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+yarn install
+ng serve
+```
 
-## Further help
+Navigate to `http://localhost:4200`. Configure the API base URL for `invenio-backend` in the environment files under `src/environments/`.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+ng build    # production build to dist/
+ng test     # unit tests via Karma
+```
+
+## Pages
+
+Dashboard · Products · Categories · Stock · Suppliers · Customers · Sale Orders · **Supply Orders (with QR scanner)** · Warehouses · Users
